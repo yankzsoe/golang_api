@@ -1,0 +1,166 @@
+definitions:
+  dtos.CreateOrUpdateUserRequest:
+    properties:
+      confirmPassword:
+        minLength: 5
+        type: string
+      email:
+        type: string
+      nickname:
+        type: string
+      password:
+        minLength: 5
+        type: string
+      roleId:
+        type: string
+      username:
+        type: string
+    required:
+    - confirmPassword
+    - email
+    - password
+    - roleId
+    - username
+    type: object
+  dtos.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+paths:
+  /auth/requestToken:
+    post:
+      consumes:
+      - application/json
+      description: Request Token for Authorization
+      parameters:
+      - description: body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.LoginRequest'
+      produces:
+      - application/json
+      responses: {}
+      summary: Request Token user
+      tags:
+      - Authentication
+  /user/:
+    get:
+      consumes:
+      - application/json
+      description: Get All User Account
+      parameters:
+      - in: query
+        name: limit
+        type: integer
+      - in: query
+        name: offset
+        type: integer
+      - in: query
+        name: where
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Get All User Data
+      tags:
+      - User
+    post:
+      consumes:
+      - application/json
+      description: Add new fake User Account
+      parameters:
+      - description: User
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateOrUpdateUserRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Post User Data
+      tags:
+      - User
+  /user/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete User Account
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Delete User Data
+      tags:
+      - User
+    get:
+      consumes:
+      - application/json
+      description: Get User Account
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Get User Data
+      tags:
+      - User
+    put:
+      consumes:
+      - application/json
+      description: Update User Account
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: User
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateOrUpdateUserRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Put User Data
+      tags:
+      - User
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

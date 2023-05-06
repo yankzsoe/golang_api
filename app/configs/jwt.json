@@ -1,0 +1,6 @@
+{
+    "key": "abcdefghij1234567890",
+    "iis": "127.0.0.1:8080",
+    "aud": ["audience01","audience02","audience03"],
+    "exp": 3600000
+}
