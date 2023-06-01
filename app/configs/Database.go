@@ -30,7 +30,9 @@ func InitDB() {
 		dbpassword := os.Getenv("dbpassword")
 		dbusername := os.Getenv("dbusername")
 		dbport := os.Getenv("dbport")
-		dsn := "host=" + dbhost + " user=" + dbusername + " password=" + dbpassword + "dbname=" + dbname + " port=" + dbport + " sslmode=disable TimeZone=Asia/Jakarta"
+		dsn := "host=" + dbhost + " user=" + dbusername + " password=" + dbpassword + "dbname=" + dbname + " port=" + dbport
+
+		log.Println(dsn)
 
 		db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 			Logger: customLogger,
