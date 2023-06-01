@@ -40,12 +40,12 @@ func InitDB() {
 		}
 
 		// Active debug mode
-		db.Debug()
+		// db.Debug()
 
-		if err != nil {
-			log.Fatal("Error when open connection to database: ", err.Error())
-			panic(err)
-		}
+		// if err != nil {
+		// 	log.Fatal("Error when open connection to database: ", err.Error())
+		// 	panic(err)
+		// }
 
 		DB = db
 	})
