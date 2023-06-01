@@ -24,7 +24,8 @@ var customLogger = logger.New(
 func InitDB() {
 	onceDb.Do(func() {
 		// Create connection to postgres
-		dbhost := os.Getenv("dblocalhost")
+		// dbhost := os.Getenv("dblocalhost")
+		dbhost := os.Getenv("externalurl")
 
 		db, err := gorm.Open(postgres.Open(dbhost), &gorm.Config{
 			Logger: customLogger,
