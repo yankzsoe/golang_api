@@ -30,7 +30,7 @@ func InitDB() {
 		dbpassword := os.Getenv("dbpassword")
 		dbusername := os.Getenv("dbusername")
 		dbport := os.Getenv("dbport")
-		dsn := "host=" + dbhost + " user=" + dbusername + " password=" + dbpassword + "dbname=" + dbname + " port=" + dbport
+		dsn := "host=" + dbhost + " user=" + dbusername + " password=" + dbpassword + " dbname=" + dbname + " port=" + dbport
 
 		log.Println(dsn)
 
