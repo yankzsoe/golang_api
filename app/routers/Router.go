@@ -1,18 +1,22 @@
 package routers
 
 import (
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 	controller "golang_api/app/controllers"
 	middleware "golang_api/app/middleware"
 	"golang_api/app/repositories"
 	"golang_api/app/services"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 
 	"github.com/gin-gonic/gin"
 )
 
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
+
+	// Setup GIN Release Mode
+	gin.SetMode(gin.ReleaseMode)
 
 	// Add Middleware
 	logger := middleware.LoggerMiddleware{}
