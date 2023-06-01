@@ -3,11 +3,12 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/gin-gonic/gin"
 	"golang_api/app/dtos"
 	"golang_api/app/models"
 	"golang_api/app/services"
 	"golang_api/app/tools"
+
+	"github.com/gin-gonic/gin"
 )
 
 type UserController struct {
@@ -54,6 +55,7 @@ func (ctrl *UserController) GetUser(ctx *gin.Context) {
 		Email:       result.Email,
 		CreatedDate: result.CreatedDate,
 		UpdatedDate: result.UpdatedDate,
+		RoleId:      result.RoleId,
 	}
 
 	response := dtos.Response{
@@ -97,6 +99,7 @@ func (ctrl *UserController) GetAllUser(ctx *gin.Context) {
 			Email:       user.Email,
 			CreatedDate: user.CreatedDate,
 			UpdatedDate: user.UpdatedDate,
+			RoleId:      user.RoleId,
 		})
 	}
 
