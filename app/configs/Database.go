@@ -24,10 +24,15 @@ var customLogger = logger.New(
 func InitDB() {
 	onceDb.Do(func() {
 		// Create connection to postgres
-		// dbhost := os.Getenv("dblocalhost")
-		dbhost := os.Getenv("externalurl")
+		// url := os.Getenv("externalurl")
+		dbhost := os.Getenv("dbhost")
+		dbname := os.Getenv("dbname")
+		dbpassword := os.Getenv("dbpassword")
+		dbusername := os.Getenv("dbusername")
+		dbport := os.Getenv("dbport")
+		dsn := "host=" + dbhost + " user=" + dbusername + " password=" + dbpassword + "dbname=" + dbname + " port=" + dbport + " sslmode=disable TimeZone=Asia/Jakarta"
 
-		db, err := gorm.Open(postgres.Open(dbhost), &gorm.Config{
+		db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 			Logger: customLogger,
 			NamingStrategy: schema.NamingStrategy{
 				SingularTable: true,
