@@ -3,17 +3,18 @@ package middleware
 import (
 	"strings"
 
-	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt/v5"
 	"golang_api/app/configs"
 	"golang_api/app/dtos"
+
+	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 func CheckToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		url := c.Request.URL
 		// hadling for unnecessary token
-		if url.Path == "/api/v1/auth/requestToken" || strings.Contains(url.Path, "/swagger/") {
+		if url.Path == "/api/v1/auth/requestToken" || strings.Contains(url.Path, "/swagger/") || url.Path == "/" {
 			c.Next()
 			return
 		}
