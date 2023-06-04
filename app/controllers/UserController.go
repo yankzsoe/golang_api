@@ -78,9 +78,13 @@ func (ctrl *UserController) GetUser(ctx *gin.Context) {
 //	@Router			/user/ [get]
 func (ctrl *UserController) GetAllUser(ctx *gin.Context) {
 	conv := tools.Conversion{}
+	limit := conv.StrToInt(ctx.Query("limit"))
+	if limit == 0 {
+		limit = 10
+	}
 	req := dtos.CommonParam{
 		Where:  ctx.Query("username"),
-		Limit:  conv.StrToInt(ctx.Query("limit")),
+		Limit:  limit,
 		Offset: conv.StrToInt(ctx.Query("offset")),
 	}
 

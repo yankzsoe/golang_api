@@ -8,7 +8,7 @@ type Conversion struct{}
 
 func (c *Conversion) StrToInt(p string) (r int) {
 	if p == "" {
-		p = "1"
+		p = "0"
 	}
 
 	val, err := strconv.Atoi(p)
