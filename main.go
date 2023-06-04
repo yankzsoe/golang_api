@@ -4,6 +4,7 @@ import (
 	"flag"
 	config "golang_api/app/configs"
 	"golang_api/app/routers"
+	"log"
 	"net/http"
 	"os"
 
@@ -14,7 +15,8 @@ import (
 )
 
 var (
-	ApiVersion string
+	ApiVersion  string
+	Environment string
 )
 
 // @contact.name				API Support
@@ -49,11 +51,19 @@ func main() {
 	docs.SwaggerInfo.Title = "Swagger User API"
 	docs.SwaggerInfo.Description = "This is a sample Swagger in Golang with GIN Framework."
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Host = os.Getenv("hostSwagger")
+	if Environment == "PRODUCTION" {
+		docs.SwaggerInfo.Host = os.Getenv("hostSwagger")
+	} else {
+		docs.SwaggerInfo.Host = "localhost:5001/api"
+	}
 	docs.SwaggerInfo.BasePath = "/v1"
 	docs.SwaggerInfo.Schemes = []string{"https"}
 
-	r.Run(":5001")
+	if Environment == "PRODUCTION" {
+		r.Run(":5001")
+	} else {
+		log.Fatal(http.ListenAndServeTLS(":5001", "server.crt", "server.key", r))
+	}
 }
 
 func GetVersion(ctx *gin.Context) {

@@ -26,7 +26,7 @@ const docTemplate = `{
     "paths": {
         "/auth/requestToken": {
             "post": {
-                "description": "Request Token for Authorization",
+                "description": "Request Token for Authorization or you can login with gmail from this link [https://localhost:5001/api/v1/auth/external/google]",
                 "consumes": [
                     "application/json"
                 ],

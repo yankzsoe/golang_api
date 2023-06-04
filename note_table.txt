@@ -1,0 +1,8 @@
+table user			=> untuk menampung data pengguna
+table module		=> untuk menampung data mapping module yang ada di apps, misal module user.
+table role			=> untuk menampung data mapping role yang ada di apps, misal role admin dan user dengan ketentuan ada pada role_module
+table role_module	=> untuk menampung data mapping antara role dengan module, misal role user memiliki module apa aja, dan di module tersebut bisa apa aja.
+
+case 1				=> bila user bisa ada akses ke module baru maka harus dimapping di role_module
+case 2				=> bila ada case role user bisa akses module user dengan privilege read, create, dan user lain harus bisa read, create, delete. 
+					maka role user harus dipecah menjadi 2, contoh user1 dan user2. user1 privilege read, create, dan user2 read, create, delete
