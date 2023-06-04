@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"strings"
 	"time"
 
 	"golang_api/app/configs"
@@ -117,16 +118,27 @@ func (u *AuthenticationService) LoginOAuthGoogle(dto tools.UserInfoResponse) (in
 			return 500, nil, err
 		}
 
-		dto := dtos.UserBasic{
+		user := dtos.UserBasic{
 			Username: dto.Given_Name,
 			Email:    dto.Email,
 			Password: *encryptedPassword,
 			RoleId:   "77691975-c695-4afd-aa40-286f2a26857d", // role user
 		}
 
-		userId, err := u.userRepository.CreateAccountBasicRole(dto)
+		userId, err := u.userRepository.CreateAccountBasicRole(user)
 		if err != nil {
-			return 500, nil, err
+			// When an error occurs due to a duplicate name, we will try using email instead.
+			if strings.Contains(err.Error(), "duplicate key") {
+				user.Username = dto.Email
+				userIds, errs := u.userRepository.CreateAccountBasicRole(user)
+				if errs != nil {
+					return 500, nil, errs
+				}
+
+				userId = userIds
+			} else {
+				return 500, nil, err
+			}
 		}
 
 		userWithRoles, err = u.userRepository.FindByIdWithRole(*userId)
