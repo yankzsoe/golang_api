@@ -23,7 +23,7 @@ func NewAuthenticationController(service *services.AuthenticationService) *Authe
 // RequestToken godoc
 //
 //	@Summary		Request Token user
-//	@Description	Request Token for Authorization or you can login with gmail from this link [https://localhost:5001/api/v1/auth/external/google]
+//	@Description	Request Token for Authorization or you can login with gmail from this link [https://golang-api-6ej0.onrender.com/api/v1/auth/external/google]
 //	@Tags			Authentication
 //	@Accept			json
 //	@Produce		json
