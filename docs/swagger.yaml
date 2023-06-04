@@ -43,7 +43,7 @@ paths:
       consumes:
       - application/json
       description: Request Token for Authorization or you can login with gmail from
-        this link [https://localhost:5001/api/v1/auth/external/google]
+        this link [https://golang-api-6ej0.onrender.com/api/v1/auth/external/google]
       parameters:
       - description: body
         in: body
