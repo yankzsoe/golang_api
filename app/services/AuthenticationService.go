@@ -76,15 +76,58 @@ func GenerateToken(username string, roleName string, permissions []dtos.Permissi
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	// Sign token with secret key
 	tokenString, err := token.SignedString([]byte(configs.GetJWTConfigurationInstance().Key))
 	if err != nil {
 		return nil, err
 	}
 
+	// Create Refresh Token
+	refreshToken, errs := GenerateRefreshToken(username, roleName, permissions)
+	if errs != nil {
+		return nil, errs
+	}
+
 	return &dtos.Token{
+		Value:        tokenString,
+		IssuedOn:     time.Unix(iat.Unix(), 0),
+		ExpiresOn:    time.Unix(exp.Unix(), 0),
+		RefreshToken: *refreshToken,
+	}, nil
+}
+
+func GenerateRefreshToken(username string, roleName string, permissions []dtos.Permission) (*dtos.RefreshToken, error) {
+	iat := jwt.NewNumericDate(time.Now())
+	// Refresh token will active after main token is expired
+	nbf := jwt.NewNumericDate(time.Now().Add(time.Millisecond * time.Duration(configs.GetJWTConfigurationInstance().Exp)))
+	// Refresh token will expire twice in its lifetime from main token.
+	exp := jwt.NewNumericDate(time.Now().Add(time.Millisecond * time.Duration(configs.GetJWTConfigurationInstance().Exp*2)))
+
+	claims := &dtos.Claims{
+		Username: username,
+		RegisteredClaims: jwt.RegisteredClaims{
+			Issuer:    configs.GetJWTConfigurationInstance().Iis,
+			Audience:  configs.GetJWTConfigurationInstance().Aud,
+			IssuedAt:  iat,
+			NotBefore: nbf,
+			ExpiresAt: exp,
+		},
+		Role: dtos.RoleSwagger{
+			Name:        roleName,
+			Permissions: permissions,
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	tokenString, err := token.SignedString([]byte(configs.GetJWTConfigurationInstance().Key))
+	if err != nil {
+		return nil, err
+	}
+
+	return &dtos.RefreshToken{
 		Value:     tokenString,
 		IssuedOn:  time.Unix(iat.Unix(), 0),
+		NotBefore: time.Unix(nbf.Unix(), 0),
 		ExpiresOn: time.Unix(exp.Unix(), 0),
 	}, nil
 }

@@ -22,7 +22,6 @@ func CheckToken() gin.HandlerFunc {
 		// Get token from header
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
-			// c.JSON(http.StatusUnauthorized, gin.H{"error": "Missing Header 'Authorization'"})
 			panic(dtos.ErrorResponse{
 				ErrorCode: 401,
 				Message: dtos.Response{
@@ -32,8 +31,6 @@ func CheckToken() gin.HandlerFunc {
 					},
 				},
 			})
-			// c.Abort()
-			return
 		}
 
 		jwtKey := []byte(configs.GetJWTConfigurationInstance().Key)
@@ -47,7 +44,6 @@ func CheckToken() gin.HandlerFunc {
 		})
 
 		if err != nil {
-			// c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 			panic(dtos.ErrorResponse{
 				ErrorCode: 401,
 				Message: dtos.Response{
@@ -57,13 +53,10 @@ func CheckToken() gin.HandlerFunc {
 					},
 				},
 			})
-			// c.Abort()
-			return
 		}
 
 		claims, ok := token.Claims.(*dtos.Claims)
 		if !ok || !token.Valid {
-			// c.JSON(http.StatusUnauthorized, gin.H{"error": "Not Authorize"})
 			panic(dtos.ErrorResponse{
 				ErrorCode: 401,
 				Message: dtos.Response{
@@ -73,15 +66,12 @@ func CheckToken() gin.HandlerFunc {
 					},
 				},
 			})
-			// c.Abort()
-			return
 		}
 
 		method := c.Request.Method
 		success := ClaimChecker(method, url.Path, *claims)
 
 		if !success {
-			// c.JSON(http.StatusUnauthorized, gin.H{"error": "Can't access this resources"})
 			panic(dtos.ErrorResponse{
 				ErrorCode: 401,
 				Message: dtos.Response{
@@ -91,8 +81,6 @@ func CheckToken() gin.HandlerFunc {
 					},
 				},
 			})
-			// c.Abort()
-			return
 		}
 
 		c.Next()
