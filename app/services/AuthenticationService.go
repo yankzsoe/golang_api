@@ -199,3 +199,75 @@ func (u *AuthenticationService) LoginOAuthGoogle(dto tools.UserInfoResponse) (in
 
 	return 200, token, nil
 }
+
+func (u *AuthenticationService) RefreshToken(dto dtos.RefreshTokenRequest) (int, *dtos.Token, error) {
+	if err := tools.GenerateErrorMessage(dto); err != nil {
+		panic(dtos.ErrorResponse{
+			ErrorCode: 400,
+			Message: dtos.Response{
+				Status: dtos.BaseResponse{
+					Success: false,
+					Message: "Failed On Validation",
+				},
+				Data: err,
+			},
+		})
+	}
+
+	username := CheckToken(dto.Token)
+
+	userWithRoles, err := u.userRepository.FindByUsernameOrEmailWithRole(username)
+	if err != nil {
+		return 500, nil, err
+	}
+
+	if len(*userWithRoles) == 0 {
+		return 404, nil, errors.New("user not found")
+	}
+
+	permissions := ConvertToPermissionsList(*userWithRoles)
+
+	token, err := GenerateToken((*userWithRoles)[0].Username, (*userWithRoles)[0].RoleName, permissions)
+	if err != nil {
+		return 500, nil, err
+	}
+
+	return 200, token, nil
+}
+
+func CheckToken(tokenString string) string {
+	jwtKey := []byte(configs.GetJWTConfigurationInstance().Key)
+	token, err := jwt.ParseWithClaims(tokenString, &dtos.Claims{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, jwt.ErrInvalidKey
+		}
+		return jwtKey, nil
+	})
+
+	if err != nil {
+		panic(dtos.ErrorResponse{
+			ErrorCode: 401,
+			Message: dtos.Response{
+				Status: dtos.BaseResponse{
+					Success: false,
+					Message: err.Error(),
+				},
+			},
+		})
+	}
+
+	claims, ok := token.Claims.(*dtos.Claims)
+	if !ok || !token.Valid {
+		panic(dtos.ErrorResponse{
+			ErrorCode: 401,
+			Message: dtos.Response{
+				Status: dtos.BaseResponse{
+					Success: false,
+					Message: "Not Authorize",
+				},
+			},
+		})
+	}
+
+	return claims.Username
+}

@@ -24,6 +24,33 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/auth/refreshToken": {
+            "post": {
+                "description": "refresh token to extend token's active period",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Refresh Token",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.RefreshTokenRequest"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/auth/requestToken": {
             "post": {
                 "description": "Request Token for Authorization or you can login with gmail from this link [https://golang-api-6ej0.onrender.com/api/v1/auth/external/google]",
@@ -36,7 +63,7 @@ const docTemplate = `{
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "Request Token user",
+                "summary": "Request Token",
                 "parameters": [
                     {
                         "description": "body",
@@ -254,6 +281,14 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.RefreshTokenRequest": {
+            "type": "object",
+            "properties": {
+                "token": {
                     "type": "string"
                 }
             }

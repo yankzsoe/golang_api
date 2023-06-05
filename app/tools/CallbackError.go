@@ -25,6 +25,8 @@ func ReadErrorBasedOnTags(fe validator.FieldError) string {
 		return "Invalid UUID Format"
 	case "eqfield":
 		return "Value not matched"
+	case "jwt":
+		return "Invalid token value"
 	}
 	return fe.Error() // default error
 }

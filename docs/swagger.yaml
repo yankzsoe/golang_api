@@ -29,6 +29,11 @@ definitions:
       username:
         type: string
     type: object
+  dtos.RefreshTokenRequest:
+    properties:
+      token:
+        type: string
+    type: object
 info:
   contact:
     email: support@swagger.io
@@ -38,6 +43,24 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
 paths:
+  /auth/refreshToken:
+    post:
+      consumes:
+      - application/json
+      description: refresh token to extend token's active period
+      parameters:
+      - description: body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.RefreshTokenRequest'
+      produces:
+      - application/json
+      responses: {}
+      summary: Refresh Token
+      tags:
+      - Authentication
   /auth/requestToken:
     post:
       consumes:
@@ -54,7 +77,7 @@ paths:
       produces:
       - application/json
       responses: {}
-      summary: Request Token user
+      summary: Request Token
       tags:
       - Authentication
   /user/:

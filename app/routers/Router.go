@@ -50,6 +50,7 @@ func SetupRouter() *gin.Engine {
 		auth := v1.Group("/auth")
 		{
 			auth.POST("/requestToken", authCtrl.Login)
+			auth.POST("/refreshToken", authCtrl.RefeshToken)
 			auth.GET("/external/google", authCtrl.Oauth2Login)
 			auth.GET("/external/google-callback", authCtrl.Callback)
 		}

@@ -14,7 +14,7 @@ func CheckToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		url := c.Request.URL
 		// hadling for unnecessary token
-		if url.Path == "/api/v1/auth/requestToken" || strings.Contains(url.Path, "/api/v1/auth/external") || strings.Contains(url.Path, "/swagger/") || url.Path == "/" {
+		if url.Path == "/api/v1/auth/requestToken" || url.Path == "/api/v1/auth/refreshToken" || strings.Contains(url.Path, "/api/v1/auth/external") || strings.Contains(url.Path, "/swagger/") || url.Path == "/" {
 			c.Next()
 			return
 		}

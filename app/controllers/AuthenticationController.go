@@ -22,7 +22,7 @@ func NewAuthenticationController(service *services.AuthenticationService) *Authe
 
 // RequestToken godoc
 //
-//	@Summary		Request Token user
+//	@Summary		Request Token
 //	@Description	Request Token for Authorization or you can login with gmail from this link [https://golang-api-6ej0.onrender.com/api/v1/auth/external/google]
 //	@Tags			Authentication
 //	@Accept			json
@@ -56,6 +56,31 @@ func (ctrl *AuthenticationController) Callback(ctx *gin.Context) {
 	userInfo := tools.GetUserInfo(code)
 
 	statusCode, token, err := ctrl.service.LoginOAuthGoogle(userInfo)
+	if err != nil {
+		ctx.JSON(statusCode, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(statusCode, gin.H{"data": token})
+}
+
+// RefreshToken godoc
+//
+//	@Summary		Refresh Token
+//	@Description	refresh token to extend token's active period
+//	@Tags			Authentication
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body	dtos.RefreshTokenRequest	true	"body"
+//	@Router			/auth/refreshToken [post]
+func (ctrl *AuthenticationController) RefeshToken(ctx *gin.Context) {
+	req := dtos.RefreshTokenRequest{}
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		panic(err)
+	}
+
+	statusCode, token, err := ctrl.service.RefreshToken(req)
 	if err != nil {
 		ctx.JSON(statusCode, gin.H{"error": err.Error()})
 		return
