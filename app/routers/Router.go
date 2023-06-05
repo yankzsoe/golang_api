@@ -15,9 +15,6 @@ import (
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
 
-	// Setup GIN Release Mode
-	gin.SetMode(gin.ReleaseMode)
-
 	// Add Middleware
 	logger := middleware.LoggerMiddleware{}
 	r.Use(middleware.ErrorHandler())
