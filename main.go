@@ -28,6 +28,10 @@ var (
 // @in							header
 // @name						Authorization
 func main() {
+	// Setup GIN in release mode
+	gin.SetMode(gin.ReleaseMode)
+
+	// Read flag from -ldflag
 	flag.Parse()
 	// Get Instance for JWT Configuration
 	// this process read file only once
