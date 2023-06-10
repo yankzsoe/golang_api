@@ -4,6 +4,7 @@ import (
 	"flag"
 	config "golang_api/configs"
 	"golang_api/routers"
+	"log"
 	"net/http"
 	"os"
 
