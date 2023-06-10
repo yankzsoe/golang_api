@@ -14,8 +14,6 @@ import (
 var DB *gorm.DB
 var onceDb sync.Once
 
-const dbIds = "ptids"
-
 var customLogger = logger.New(
 	log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
 	logger.Config{
@@ -26,8 +24,18 @@ var customLogger = logger.New(
 func InitDB() {
 	onceDb.Do(func() {
 		// Create connection to postgres
-		dsn := "host=localhost user=postgres password=Admin123$ dbname=postgres port=5432 sslmode=disable TimeZone=Asia/Jakarta"
+		// url := os.Getenv("externalurl")
+		dbhost := os.Getenv("dbhost")
+		dbname := os.Getenv("dbname")
+		dbpassword := os.Getenv("dbpassword")
+		dbusername := os.Getenv("dbusername")
+		dbport := os.Getenv("dbport")
+		dsn := "host=" + dbhost + " user=" + dbusername + " password=" + dbpassword + " dbname=" + dbname + " port=" + dbport
+
+		log.Println(dsn)
+
 		db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+			Logger: customLogger,
 			NamingStrategy: schema.NamingStrategy{
 				SingularTable: true,
 			},
@@ -39,46 +47,12 @@ func InitDB() {
 		}
 
 		// Active debug mode
-		db.Debug()
+		// db.Debug()
 
-		// Check availability the database
-		res := db.Exec("SELECT 'CREATE DATABASE " + dbIds + "' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '" + dbIds + "')")
-
-		if res.Error != nil {
-			log.Fatal("Error when check availability the database: ", err.Error())
-			panic(err)
-		}
-
-		if res.RowsAffected > 0 {
-			err = db.Exec("CREATE DATABASE " + dbIds).Error
-			if err != nil {
-				if err != nil {
-					log.Fatal("Error when creating the database: ", err.Error())
-					panic(err)
-				}
-			}
-			log.Print("Database successfully created..")
-		} else {
-			log.Print("Database already detected..")
-		}
-
-		dsn = "host=localhost user=postgres password=Admin123$ dbname=" + dbIds + " port=5432 sslmode=disable TimeZone=Asia/Jakarta"
-		db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
-			Logger: customLogger,
-			NamingStrategy: schema.NamingStrategy{
-				SingularTable: true,
-			},
-		})
-
-		if err != nil {
-			log.Fatal("Error when open connection to database: ", err.Error())
-			panic(err)
-		}
-
-		// db.AutoMigrate(&model.RoleModel{})
-		// db.AutoMigrate(&model.UserModel{})
-		// db.AutoMigrate(&model.ModuleModel{})
-		// db.AutoMigrate(&model.RoleModuleModel{})
+		// if err != nil {
+		// 	log.Fatal("Error when open connection to database: ", err.Error())
+		// 	panic(err)
+		// }
 
 		DB = db
 	})
