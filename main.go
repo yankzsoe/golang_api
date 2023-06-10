@@ -4,6 +4,7 @@ import (
 	"flag"
 	config "golang_api/app/configs"
 	"golang_api/app/routers"
+	"log"
 	"net/http"
 	"os"
 
@@ -32,6 +33,7 @@ func main() {
 
 	// Read flag from -ldflag
 	flag.Parse()
+
 	// Get Instance for JWT Configuration
 	// this process read file only once
 	// or called Singleton pattern
