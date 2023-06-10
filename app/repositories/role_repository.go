@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type RoleReporitory struct {
@@ -57,4 +58,26 @@ func (repo *RoleReporitory) Create(model *models.RoleModel) *models.RoleModel {
 	}
 
 	return model
+}
+
+func (repo *RoleReporitory) Update(data *models.RoleModel) (*models.RoleModel, error) {
+	role := models.RoleModel{}
+
+	if err := repo.DB.Clauses(clause.Returning{}).Model(&role).Where("role_id=?", data.ID).Updates(map[string]interface{}{
+		"role_name":    data.Name,
+		"is_active":    data.IsActive,
+		"updated_date": data.UpdatedDate,
+	}).Error; err != nil {
+		return nil, err
+	}
+
+	return &role, nil
+}
+
+func (repo *RoleReporitory) Delete(id string) (*models.RoleModel, error) {
+	role := models.RoleModel{}
+	if err := repo.DB.Clauses(clause.Returning{}).Delete(&role, "role_id", id).Error; err != nil {
+		return nil, err
+	}
+	return &role, nil
 }

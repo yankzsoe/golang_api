@@ -22,6 +22,15 @@ definitions:
     - roleId
     - username
     type: object
+  dtos.CreateUpdateRoleRequest:
+    properties:
+      is_active:
+        type: boolean
+      name:
+        type: string
+    required:
+    - name
+    type: object
   dtos.LoginRequest:
     properties:
       password:
@@ -103,7 +112,44 @@ paths:
       summary: Get All Role Data
       tags:
       - Role
+    post:
+      consumes:
+      - application/json
+      description: Create Role Data
+      parameters:
+      - description: Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateUpdateRoleRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Create Role Data
+      tags:
+      - Role
   /role/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Role Data
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Role Data
+      tags:
+      - Role
     get:
       consumes:
       - application/json
@@ -120,6 +166,30 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Get Role Data
+      tags:
+      - Role
+    put:
+      consumes:
+      - application/json
+      description: Update Role Data
+      parameters:
+      - description: Parameters
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Role
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateUpdateRoleRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Update Role Data
       tags:
       - Role
   /role/name/{name}:

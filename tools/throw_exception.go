@@ -46,10 +46,20 @@ func CreateSuccessResponseWithData(data interface{}) dtos.Response {
 	}
 }
 
-func CreateNotFoundResponse() dtos.Response {
+func CreateSuccessDeletedResponseWithData(data interface{}) dtos.Response {
 	return dtos.Response{
 		Status: dtos.BaseResponse{
 			Success: true,
+			Message: "Deleted successfully",
+		},
+		Data: data,
+	}
+}
+
+func CreateNotFoundResponse() dtos.Response {
+	return dtos.Response{
+		Status: dtos.BaseResponse{
+			Success: false,
 			Message: "Not Found"},
 	}
 }
