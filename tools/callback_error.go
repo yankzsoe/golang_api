@@ -11,14 +11,14 @@ type CallbackError struct {
 	Message string `json:"message"`
 }
 
-func ReadErrorBasedOnTags(fe validator.FieldError) string {
+func readErrorBasedOnTags(fe validator.FieldError) string {
 	switch fe.Tag() {
 	case "required":
-		return "Data Harus diisi"
+		return "Data must be filled in"
 	case "min":
-		return "Data Minimal " + fe.Param() + " Karakter"
+		return "Enter at least " + fe.Param() + " characters"
 	case "max":
-		return "Data Maximal " + fe.Param() + " Karakter"
+		return "The maximum amount of data is " + fe.Param() + " characters"
 	case "email":
 		return "Invalid Email"
 	case "uuid":
@@ -38,7 +38,7 @@ func GenerateErrorMessage(i interface{}) []CallbackError {
 		if errors.As(err, &va) {
 			out := make([]CallbackError, len(va))
 			for i, fe := range va {
-				out[i] = CallbackError{fe.Field(), ReadErrorBasedOnTags(fe)}
+				out[i] = CallbackError{fe.Field(), readErrorBasedOnTags(fe)}
 			}
 			return out
 		}
@@ -52,7 +52,7 @@ func GenerateErrorMessageV2(err error) []CallbackError {
 	if errors.As(err, &va) {
 		out := make([]CallbackError, len(va))
 		for i, fe := range va {
-			out[i] = CallbackError{fe.Field(), ReadErrorBasedOnTags(fe)}
+			out[i] = CallbackError{fe.Field(), readErrorBasedOnTags(fe)}
 		}
 		return out
 	}
