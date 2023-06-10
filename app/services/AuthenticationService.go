@@ -5,10 +5,10 @@ import (
 	"strings"
 	"time"
 
-	"golang_api/app/configs"
 	"golang_api/app/dtos"
 	"golang_api/app/repositories"
-	"golang_api/app/tools"
+	"golang_api/configs"
+	"golang_api/tools"
 
 	"github.com/golang-jwt/jwt/v5"
 )

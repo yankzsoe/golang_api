@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
-	"os"
 
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -15,9 +14,9 @@ var Configs oauth2.Config
 
 func GenerateOAuthGoogleUrl() string {
 	Config := &oauth2.Config{
-		ClientID:     os.Getenv("gclientid"),
-		ClientSecret: os.Getenv("gclientsecret"),
-		RedirectURL:  os.Getenv("gredirecturl"),
+		ClientID:     "1069137797205-9f314ntntd3ac3dl144rbl6941q8cda6.apps.googleusercontent.com",
+		ClientSecret: "AJEYTAbiHyZ7w3OyCKNYAFYL",
+		RedirectURL:  "https://localhost:5001/api/v1/auth/external/google-callback",
 		Scopes:       []string{"email", "profile"},
 		Endpoint:     google.Endpoint,
 	}

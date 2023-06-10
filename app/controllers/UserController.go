@@ -6,7 +6,7 @@ import (
 	"golang_api/app/dtos"
 	"golang_api/app/models"
 	"golang_api/app/services"
-	"golang_api/app/tools"
+	"golang_api/tools"
 
 	"github.com/gin-gonic/gin"
 )

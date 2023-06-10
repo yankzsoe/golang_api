@@ -3,8 +3,8 @@ package middleware
 import (
 	"strings"
 
-	"golang_api/app/configs"
 	"golang_api/app/dtos"
+	"golang_api/configs"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
