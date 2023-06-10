@@ -29,7 +29,15 @@ func ThrowExceptionOnValidation(errCode int, data interface{}) {
 	})
 }
 
-func CreateResponseWithData(data interface{}) dtos.Response {
+func CreateSuccessResponse() dtos.Response {
+	return dtos.Response{
+		Status: dtos.BaseResponse{
+			Success: true,
+			Message: "Successfully"},
+	}
+}
+
+func CreateSuccessResponseWithData(data interface{}) dtos.Response {
 	return dtos.Response{
 		Status: dtos.BaseResponse{
 			Success: true,

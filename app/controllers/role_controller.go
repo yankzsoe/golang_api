@@ -40,12 +40,12 @@ func (r *RoleController) GetRoleById(ctx *gin.Context) {
 	result := r.service.GetRoleById(uriId)
 
 	if result == nil {
-		response := tools.CreateResponseWithData(result)
+		response := tools.CreateSuccessResponseWithData(result)
 		ctx.JSON(http.StatusNotFound, response)
 		return
 	}
 
-	response := tools.CreateResponseWithData(result)
+	response := tools.CreateSuccessResponseWithData(result)
 	ctx.JSON(http.StatusOK, response)
 }
 
@@ -70,12 +70,12 @@ func (r *RoleController) GetRoleByName(ctx *gin.Context) {
 	result := r.service.GetRoleByName(uriName)
 
 	if result == nil {
-		response := tools.CreateResponseWithData(result)
+		response := tools.CreateSuccessResponseWithData(result)
 		ctx.JSON(http.StatusNotFound, response)
 		return
 	}
 
-	response := tools.CreateResponseWithData(result)
+	response := tools.CreateSuccessResponseWithData(result)
 	ctx.JSON(http.StatusOK, response)
 }
 
@@ -109,11 +109,11 @@ func (r *RoleController) GetRoles(ctx *gin.Context) {
 	result := r.service.GetRoles(param)
 
 	if result == nil {
-		response := tools.CreateResponseWithData(result)
+		response := tools.CreateSuccessResponseWithData(result)
 		ctx.JSON(http.StatusNotFound, response)
 		return
 	}
 
-	response := tools.CreateResponseWithData(result)
+	response := tools.CreateSuccessResponseWithData(result)
 	ctx.JSON(http.StatusOK, response)
 }
