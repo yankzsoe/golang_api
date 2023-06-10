@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"net/http"
+	"strings"
 	"time"
 
 	"golang_api/app/dtos"
@@ -40,7 +41,7 @@ func (repo *UserRepository) Create(user *models.UserModel) (*models.UserModel, e
 
 func (repo *UserRepository) FindAll(param dtos.CommonParam) (*[]models.UserModel, error) {
 	var user []models.UserModel
-	result := repo.DB.Where("username LIKE ?", "%"+param.Where+"%").Limit(param.Limit).Offset(param.Offset).Find(&user)
+	result := repo.DB.Where("LOWER(username) LIKE ?", "%"+strings.ToLower(param.Where)+"%").Limit(param.Limit).Offset(param.Offset).Find(&user)
 	if result.Error != nil {
 		panic(dtos.ErrorResponse{
 			ErrorCode: http.StatusInternalServerError,

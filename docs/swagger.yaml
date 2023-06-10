@@ -80,6 +80,67 @@ paths:
       summary: Request Token
       tags:
       - Authentication
+  /role:
+    get:
+      consumes:
+      - application/json
+      description: Get All Role Data
+      parameters:
+      - in: query
+        name: limit
+        type: integer
+      - in: query
+        name: offset
+        type: integer
+      - in: query
+        name: where
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Get All Role Data
+      tags:
+      - Role
+  /role/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get Role Data By ID
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Get Role Data
+      tags:
+      - Role
+  /role/name/{name}:
+    get:
+      consumes:
+      - application/json
+      description: Get Role Data By Name
+      parameters:
+      - description: Name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Get Role Data
+      tags:
+      - Role
   /user/:
     get:
       consumes:

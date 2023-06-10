@@ -13,8 +13,6 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-const key = "abcdefghij1234567890"
-
 type AuthenticationService struct {
 	userRepository repositories.UserRepository
 }

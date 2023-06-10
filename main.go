@@ -4,12 +4,11 @@ import (
 	"flag"
 	config "golang_api/configs"
 	"golang_api/routers"
-	"log"
 	"net/http"
 	"os"
 
-	"golang_api/app/migrations"
 	"golang_api/docs"
+	"golang_api/migrations"
 
 	"github.com/gin-gonic/gin"
 )
@@ -42,7 +41,7 @@ func main() {
 	// Initialize connection to Database
 	config.InitDB()
 
-	// Implement Custom Migration
+	// Implement Custom Migrations
 	if err := migrations.Apply(); err != nil {
 		panic(err)
 	}
@@ -62,13 +61,9 @@ func main() {
 		docs.SwaggerInfo.Host = "localhost:5001/api"
 	}
 	docs.SwaggerInfo.BasePath = "/v1"
-	docs.SwaggerInfo.Schemes = []string{"https"}
+	docs.SwaggerInfo.Schemes = []string{"https", "http"}
 
-	if Environment == "PRODUCTION" {
-		r.Run(":5001")
-	} else {
-		log.Fatal(http.ListenAndServeTLS(":5001", "server.crt", "server.key", r))
-	}
+	r.Run(":5001")
 }
 
 func GetVersion(ctx *gin.Context) {
