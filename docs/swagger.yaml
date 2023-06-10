@@ -36,9 +36,9 @@ definitions:
     type: object
 info:
   contact:
-    email: support@swagger.io
+    email: yankzsoe@gmail.com
     name: API Support
-    url: http://www.swagger.io/support
+    url: https://www.linkedin.com/in/yayang-suryana-308a5213a/
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
