@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"os"
 
-	"golang_api/app/migrations"
 	"golang_api/docs"
+	"golang_api/migrations"
 
 	"github.com/gin-gonic/gin"
 )
@@ -42,7 +42,7 @@ func main() {
 	// Initialize connection to Database
 	config.InitDB()
 
-	// Implement Custom Migration
+	// Implement Custom Migrations
 	if err := migrations.Apply(); err != nil {
 		panic(err)
 	}
