@@ -1,0 +1,6 @@
+{
+    "key": "abcdefghij1234567890",
+    "iis": "golang_api",
+    "aud": ["localhost","google"],
+    "exp": 3600000
+}

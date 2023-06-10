@@ -2,9 +2,8 @@ package main
 
 import (
 	"flag"
-	config "golang_api/app/configs"
-	"golang_api/app/routers"
-	"log"
+	config "golang_api/configs"
+	"golang_api/routers"
 	"net/http"
 	"os"
 
