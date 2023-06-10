@@ -22,6 +22,15 @@ definitions:
     - roleId
     - username
     type: object
+  dtos.CreateUpdateModuleRequest:
+    properties:
+      name:
+        type: string
+      remark:
+        type: string
+    required:
+    - name
+    type: object
   dtos.CreateUpdateRoleRequest:
     properties:
       is_active:
@@ -89,6 +98,128 @@ paths:
       summary: Request Token
       tags:
       - Authentication
+  /module:
+    get:
+      consumes:
+      - application/json
+      description: Get All Module Data
+      parameters:
+      - in: query
+        name: limit
+        type: integer
+      - in: query
+        name: offset
+        type: integer
+      - in: query
+        name: where
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Get All Module Data
+      tags:
+      - Module
+    post:
+      consumes:
+      - application/json
+      description: Create Module Data
+      parameters:
+      - description: Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateUpdateModuleRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Create Module Data
+      tags:
+      - Module
+  /module/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Module Data
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Module Data
+      tags:
+      - Module
+    get:
+      consumes:
+      - application/json
+      description: Get Module Data By ID
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Get Module Data
+      tags:
+      - Module
+    put:
+      consumes:
+      - application/json
+      description: Update Module Data
+      parameters:
+      - description: Parameters
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Module
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateUpdateModuleRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Update Module Data
+      tags:
+      - Module
+  /module/name/{name}:
+    get:
+      consumes:
+      - application/json
+      description: Get Module Data By Name
+      parameters:
+      - description: Name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Get Module Data
+      tags:
+      - Module
   /role:
     get:
       consumes:

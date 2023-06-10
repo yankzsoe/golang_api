@@ -24,16 +24,19 @@ func SetupRouter() *gin.Engine {
 	// Load instance UserRepository
 	userRepository := repositories.NewUserRepository()
 	roleRepository := repositories.NewRoleRepository()
+	moduleRepository := repositories.NewModuleRepository()
 
 	// Load instance UserService
 	userService := services.NewUserService(*userRepository)
 	authService := services.NewAuthenticationService(*userRepository)
 	roleService := services.NewRoleService(*roleRepository)
+	moduleService := services.NewModuleService(*moduleRepository)
 
 	// Load instance UserController
 	userCtrl := controller.NewUserController(userService)
 	authCtrl := controller.NewAuthenticationController(authService)
 	roleCtrl := controller.NewRoleController(roleService)
+	moduleCtrl := controller.NewModuleController(moduleService)
 
 	// Create group routing endpoint "/api/v1"
 	v1 := r.Group("/api/v1")
@@ -63,6 +66,16 @@ func SetupRouter() *gin.Engine {
 			role.POST("/", roleCtrl.PostRole)
 			role.PUT("/:id", roleCtrl.PutRole)
 			role.DELETE("/:id", roleCtrl.DeleteRole)
+		}
+
+		module := v1.Group("module")
+		{
+			module.GET("/", moduleCtrl.GetModules)
+			module.GET("/:id", moduleCtrl.GetModuleById)
+			module.GET("/name/:name", moduleCtrl.GetModuleByName)
+			module.POST("/", moduleCtrl.PostModule)
+			module.PUT("/:id", moduleCtrl.PutModule)
+			module.DELETE("/:id", moduleCtrl.DeleteModule)
 		}
 
 	}
