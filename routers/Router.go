@@ -23,14 +23,17 @@ func SetupRouter() *gin.Engine {
 
 	// Load instance UserRepository
 	userRepository := repositories.NewUserRepository()
+	roleRepository := repositories.NewRoleRepository()
 
 	// Load instance UserService
 	userService := services.NewUserService(*userRepository)
 	authService := services.NewAuthenticationService(*userRepository)
+	roleService := services.NewRoleService(*roleRepository)
 
 	// Load instance UserController
 	userCtrl := controller.NewUserController(userService)
 	authCtrl := controller.NewAuthenticationController(authService)
+	roleCtrl := controller.NewRoleController(roleService)
 
 	// Create group routing endpoint "/api/v1"
 	v1 := r.Group("/api/v1")
@@ -50,6 +53,13 @@ func SetupRouter() *gin.Engine {
 			auth.POST("/refreshToken", authCtrl.RefeshToken)
 			auth.GET("/external/google", authCtrl.Oauth2Login)
 			auth.GET("/external/google-callback", authCtrl.Callback)
+		}
+
+		role := v1.Group("role")
+		{
+			role.GET("/:id", roleCtrl.GetRoleById)
+			role.GET("/name/:name", roleCtrl.GetRoleByName)
+			role.GET("/", roleCtrl.GetRoles)
 		}
 
 	}

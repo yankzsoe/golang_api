@@ -35,12 +35,7 @@ func (ctrl *UserController) GetUser(ctx *gin.Context) {
 	uriUuid := dtos.UriUuid{}
 	if err := ctx.ShouldBindUri(&uriUuid); err != nil {
 		errMsg := tools.GenerateErrorMessageV2(err)
-		response := dtos.Response{
-			Status: dtos.BaseResponse{false, "Failed On Validation"},
-			Data:   errMsg,
-		}
-		ctx.JSON(http.StatusBadRequest, response)
-		return
+		tools.ThrowExceptionOnValidation(http.StatusBadRequest, errMsg)
 	}
 
 	result, err := ctrl.service.GetUserByID(uriUuid.Id)
@@ -83,7 +78,7 @@ func (ctrl *UserController) GetAllUser(ctx *gin.Context) {
 		limit = 10
 	}
 	req := dtos.CommonParam{
-		Where:  ctx.Query("username"),
+		Where:  ctx.Query("where"),
 		Limit:  limit,
 		Offset: conv.StrToInt(ctx.Query("offset")),
 	}
