@@ -22,7 +22,7 @@ func GetJWTConfigurationInstance() *JwtConfiguration {
 	onceJwt.Do(func() {
 		reader := tools.ConfigReader{}
 		jtwConfig := JwtConfiguration{}
-		reader.ReadFileConfiguration("/app/configs/jwt.json", &jtwConfig)
+		reader.ReadFileConfiguration("/configs/jwt.json", &jtwConfig)
 		instance = &jtwConfig
 	})
 	return instance
