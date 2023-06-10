@@ -1,9 +1,9 @@
 package migrations
 
 import (
-	"golang_api/app/configs"
 	"golang_api/app/migrations/dummy"
 	"golang_api/app/models"
+	"golang_api/configs"
 )
 
 func Apply() error {

@@ -3,7 +3,7 @@ package configs
 import (
 	"sync"
 
-	"golang_api/app/tools"
+	"golang_api/tools"
 )
 
 var (

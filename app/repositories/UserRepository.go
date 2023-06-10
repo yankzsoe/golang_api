@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"time"
 
-	config "golang_api/app/configs"
 	"golang_api/app/dtos"
 	"golang_api/app/models"
+	config "golang_api/configs"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"

@@ -75,11 +75,6 @@ func InitDB() {
 			panic(err)
 		}
 
-		// db.AutoMigrate(&model.RoleModel{})
-		// db.AutoMigrate(&model.UserModel{})
-		// db.AutoMigrate(&model.ModuleModel{})
-		// db.AutoMigrate(&model.RoleModuleModel{})
-
 		DB = db
 	})
 }
