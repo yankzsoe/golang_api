@@ -95,6 +95,10 @@ func (r *RoleService) GetRoleByName(name dtos.UriName) *[]dtos.CreateUpdateRoleR
 	return nil
 }
 
+func (r *RoleService) GetRoleWithModule(name dtos.UriName) *dtos.RoleWithModuleResponse {
+	return r.roleRepository.FindRoleWithModule(name.Name)
+}
+
 func (r *RoleService) PutRole(id dtos.UriUuid, role dtos.CreateUpdateRoleRequest) *dtos.CreateUpdateRoleResponse {
 	timeNow := time.Now()
 	data := models.RoleModel{
@@ -122,6 +126,42 @@ func (r *RoleService) PutRole(id dtos.UriUuid, role dtos.CreateUpdateRoleRequest
 	}
 
 	return &updatedRole
+}
+
+func (r *RoleService) PutRoleSetModule(id dtos.UriUuid, role dtos.RoleSetModuleRequest) *dtos.RoleSetModuleResponse {
+	modules := []models.RoleModuleModel{}
+	roleId := id.Id
+
+	// Mapping from the dto to the model
+	for _, module := range role.Modules {
+		modules = append(modules, models.RoleModuleModel{
+			RoleId:    roleId,
+			ModuleId:  module.ModuleId,
+			CanRead:   module.CanRead,
+			CanCreate: module.CanCreate,
+			CanUpdate: module.CanUpdate,
+			CanDelete: module.CanDelete,
+		})
+	}
+
+	// Process the data in the model into a repository
+	err := r.roleRepository.UpdateSetRole(roleId, &modules)
+	if err != nil {
+		tools.ThrowException(http.StatusInternalServerError, err.Error())
+	}
+
+	result := dtos.RoleSetModuleResponse{}
+	for _, module := range modules {
+		result.Modules = append(result.Modules, dtos.ModuleDetail{
+			ModuleId:  module.ID,
+			CanRead:   module.CanRead,
+			CanCreate: module.CanCreate,
+			CanUpdate: module.CanUpdate,
+			CanDelete: module.CanDelete,
+		})
+	}
+
+	return &result
 }
 
 func (r *RoleService) DeleteRole(id dtos.UriUuid) *dtos.CreateUpdateRoleResponse {

@@ -62,9 +62,11 @@ func SetupRouter() *gin.Engine {
 		{
 			role.GET("/", roleCtrl.GetRoles)
 			role.GET("/:id", roleCtrl.GetRoleById)
+			role.GET("/module/:name", roleCtrl.GetRoleWithModule)
 			role.GET("/name/:name", roleCtrl.GetRoleByName)
 			role.POST("/", roleCtrl.PostRole)
 			role.PUT("/:id", roleCtrl.PutRole)
+			role.PUT("/module/set/:id", roleCtrl.PutRoleSetModule)
 			role.DELETE("/:id", roleCtrl.DeleteRole)
 		}
 

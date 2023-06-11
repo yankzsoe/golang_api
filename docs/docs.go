@@ -339,6 +339,75 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/role/module/set/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Update Role Data",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Role"
+                ],
+                "summary": "Update Role Data",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Parameters",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Role",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.RoleWithModuleRequest"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/role/module/{name}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get Role With Module Data By Name",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Role"
+                ],
+                "summary": "Get Role With Module Data",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/role/name/{name}": {
             "get": {
                 "security": [
@@ -703,6 +772,46 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.RoleModule": {
+            "type": "object",
+            "required": [
+                "moduleId"
+            ],
+            "properties": {
+                "canCreate": {
+                    "type": "boolean"
+                },
+                "canDelete": {
+                    "type": "boolean"
+                },
+                "canRead": {
+                    "type": "boolean"
+                },
+                "canUpdate": {
+                    "type": "boolean"
+                },
+                "moduleId": {
+                    "type": "string"
+                }
+            }
+        },
+        "dtos.RoleWithModuleRequest": {
+            "type": "object",
+            "properties": {
+                "modules": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dtos.RoleModule"
+                    }
+                },
+                "roleId": {
+                    "type": "string"
+                },
+                "roleName": {
                     "type": "string"
                 }
             }

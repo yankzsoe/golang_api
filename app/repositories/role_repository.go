@@ -51,6 +51,46 @@ func (repo *RoleReporitory) FindByName(name string) *[]models.RoleModel {
 	return &roles
 }
 
+func (repo *RoleReporitory) FindRoleWithModule(name string) *dtos.RoleWithModuleResponse {
+	queryResult := dtos.RoleWithModuleResponse{}
+	rows, err := repo.DB.Raw("SELECT r.role_id, r.role_name, mm.module_id, mm.module_name"+
+		" FROM \"role\" r"+
+		" LEFT JOIN \"role_module\" rm ON r.role_id = rm.role_id"+
+		" LEFT JOIN \"module\" mm ON rm.module_id = mm.module_id"+
+		" WHERE LOWER(r.role_name) = ?", strings.ToLower(name)).Rows()
+	if err != nil {
+		tools.ThrowException(500, err.Error())
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		data := dtos.RoleWithModuleScanRow{}
+		err := repo.DB.ScanRows(rows, &data)
+		if err != nil {
+			tools.ThrowException(500, err.Error())
+		}
+
+		if len(queryResult.Modules) == 0 {
+			queryResult.RoleId = data.RoleId
+			queryResult.RoleName = data.RoleName
+			if len(data.ModuleId) > 0 {
+				queryResult.Modules = append(queryResult.Modules, dtos.Module{
+					ModuleId:   data.ModuleId,
+					ModuleName: data.ModuleName,
+				})
+			}
+		} else {
+			queryResult.Modules = append(queryResult.Modules, dtos.Module{
+				ModuleId:   data.ModuleId,
+				ModuleName: data.ModuleName,
+			})
+		}
+	}
+
+	return &queryResult
+}
+
 func (repo *RoleReporitory) Create(model *models.RoleModel) *models.RoleModel {
 	result := repo.DB.Create(&model)
 	if result.Error != nil {
@@ -72,6 +112,30 @@ func (repo *RoleReporitory) Update(data *models.RoleModel) (*models.RoleModel, e
 	}
 
 	return &role, nil
+}
+
+func (repo *RoleReporitory) UpdateSetRole(roleId string, data *[]models.RoleModuleModel) error {
+	// Process using transactions
+	result := repo.DB.Transaction(func(tx *gorm.DB) error {
+		// Step 1, cleanup the role module data
+		if err := tx.Delete(models.RoleModuleModel{}, "role_id", roleId).Error; err != nil {
+			return err
+		}
+
+		// Step 2, If the role module doesn't send, the process will remove the role module only
+		if len(*data) < 1 {
+			return nil
+		}
+
+		// Step 3, Insert the role module data
+		if err := tx.Create(&data).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	return result
 }
 
 func (repo *RoleReporitory) Delete(id string) (*models.RoleModel, error) {

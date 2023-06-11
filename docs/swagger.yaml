@@ -52,6 +52,32 @@ definitions:
       token:
         type: string
     type: object
+  dtos.RoleModule:
+    properties:
+      canCreate:
+        type: boolean
+      canDelete:
+        type: boolean
+      canRead:
+        type: boolean
+      canUpdate:
+        type: boolean
+      moduleId:
+        type: string
+    required:
+    - moduleId
+    type: object
+  dtos.RoleWithModuleRequest:
+    properties:
+      modules:
+        items:
+          $ref: '#/definitions/dtos.RoleModule'
+        type: array
+      roleId:
+        type: string
+      roleName:
+        type: string
+    type: object
 info:
   contact:
     email: yankzsoe@gmail.com
@@ -315,6 +341,50 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/dtos.CreateUpdateRoleRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Update Role Data
+      tags:
+      - Role
+  /role/module/{name}:
+    get:
+      consumes:
+      - application/json
+      description: Get Role With Module Data By Name
+      parameters:
+      - description: name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Get Role With Module Data
+      tags:
+      - Role
+  /role/module/set/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update Role Data
+      parameters:
+      - description: Parameters
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Role
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.RoleWithModuleRequest'
       produces:
       - application/json
       responses: {}

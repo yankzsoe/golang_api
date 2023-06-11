@@ -118,6 +118,36 @@ func (r *RoleController) GetRoles(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
+// GetRole godoc
+//
+//	@Summary		Get Role With Module Data
+//	@Description	Get Role With Module Data By Name
+//	@Tags			Role
+//	@Accept			json
+//	@Produce		json
+//	@Security		ApiKeyAuth
+//	@Param			name	path	string	true	"name"
+//	@Router			/role/module/{name} [get]
+func (r *RoleController) GetRoleWithModule(ctx *gin.Context) {
+	uriName := dtos.UriName{}
+
+	if err := ctx.ShouldBindUri(&uriName); err != nil {
+		errMsg := tools.GenerateErrorMessageV2(err)
+		tools.ThrowExceptionOnValidation(http.StatusBadRequest, errMsg)
+	}
+
+	result := r.service.GetRoleWithModule(uriName)
+
+	if len(result.RoleId) < 1 {
+		response := tools.CreateNotFoundResponse()
+		ctx.JSON(http.StatusNotFound, response)
+		return
+	}
+
+	response := tools.CreateSuccessResponseWithData(result)
+	ctx.JSON(http.StatusOK, response)
+}
+
 // PostRole godoc
 //
 //	@Summary		Create Role Data
@@ -167,6 +197,46 @@ func (r *RoleController) PutRole(ctx *gin.Context) {
 	}
 
 	result := r.service.PutRole(roleId, role)
+
+	if result == nil {
+		resp := tools.CreateNotFoundResponse()
+		ctx.JSON(http.StatusNotFound, resp)
+		return
+	}
+
+	response := tools.CreateSuccessResponseWithData(result)
+	ctx.JSON(http.StatusOK, response)
+}
+
+// PutRoleSetModule godoc
+//
+//	@Summary		Update Role Data
+//	@Description	Update Role Data
+//	@Tags			Role
+//	@Accept			json
+//	@Produce		json
+//	@Security		ApiKeyAuth
+//	@Param			id		path	string						true	"Parameters"
+//	@Param			request	body	dtos.RoleWithModuleRequest	true	"Role"
+//	@Router			/role/module/set/{id} [put]
+func (r *RoleController) PutRoleSetModule(ctx *gin.Context) {
+	roleId := dtos.UriUuid{}
+
+	// Validate id
+	if err := ctx.ShouldBindUri(&roleId); err != nil {
+		errMsg := tools.GenerateErrorMessageV2(err)
+		tools.ThrowExceptionOnValidation(http.StatusBadRequest, errMsg)
+	}
+
+	// Validate body
+	moudules := dtos.RoleSetModuleRequest{}
+	if err := ctx.ShouldBindJSON(&moudules); err != nil {
+		errMsg := tools.GenerateErrorMessageV2(err)
+		tools.ThrowExceptionOnValidation(http.StatusBadRequest, errMsg)
+	}
+
+	// Process the data on servcies
+	result := r.service.PutRoleSetModule(roleId, moudules)
 
 	if result == nil {
 		resp := tools.CreateNotFoundResponse()
