@@ -114,9 +114,11 @@ func (repo *RoleReporitory) Update(data *models.RoleModel) (*models.RoleModel, e
 	return &role, nil
 }
 
-func (repo *RoleReporitory) UpdateSetRole(roleId string, data *[]models.RoleModuleModel) error {
+func (repo *RoleReporitory) UpdateSetRole(roleId string, data *[]models.RoleModuleModel) (*dtos.RoleSetModuleResponse, error) {
+	result := dtos.RoleSetModuleResponse{}
+
 	// Process using transactions
-	result := repo.DB.Transaction(func(tx *gorm.DB) error {
+	err := repo.DB.Transaction(func(tx *gorm.DB) error {
 		// Step 1, cleanup the role module data
 		if err := tx.Delete(models.RoleModuleModel{}, "role_id", roleId).Error; err != nil {
 			return err
@@ -132,10 +134,45 @@ func (repo *RoleReporitory) UpdateSetRole(roleId string, data *[]models.RoleModu
 			return err
 		}
 
+		// Step 4, select recently inserted the data
+		rows, err := tx.Raw("SELECT r.role_id, r.role_name, mm.module_id, mm.module_name, rm.can_read, rm.can_create, rm.can_update, rm.can_delete"+
+			" FROM \"role\" r"+
+			" LEFT JOIN \"role_module\" rm ON r.role_id = rm.role_id"+
+			" LEFT JOIN \"module\" mm ON rm.module_id = mm.module_id"+
+			" WHERE r.role_id = ?", roleId).Rows()
+		if err != nil {
+			return err
+		}
+
+		defer rows.Close()
+		isFrist := true
+		for rows.Next() {
+			scanRow := dtos.RoleSetModuleScanRows{}
+			err := repo.DB.ScanRows(rows, &scanRow)
+			if err != nil {
+				return err
+			}
+
+			if isFrist {
+				result.RoleId = scanRow.RoleId
+				result.RoleName = scanRow.RoleName
+			}
+
+			result.Modules = append(result.Modules, dtos.ModuleDetail{
+				ModuleId:   scanRow.ModuleId,
+				ModuleName: scanRow.ModuleName,
+				CanRead:    scanRow.CanRead,
+				CanCreate:  scanRow.CanCreate,
+				CanUpdate:  scanRow.CanUpdate,
+				CanDelete:  scanRow.CanDelete,
+			})
+
+		}
+
 		return nil
 	})
 
-	return result
+	return &result, err
 }
 
 func (repo *RoleReporitory) Delete(id string) (*models.RoleModel, error) {

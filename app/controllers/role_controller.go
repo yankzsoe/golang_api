@@ -21,13 +21,14 @@ func NewRoleController(svc *services.RoleService) *RoleController {
 
 // GetRole godoc
 //
-//	@Summary		Get Role Data
-//	@Description	Get Role Data By ID
+//	@Summary		Get Role By ID
+//	@Description	Get Role By ID
 //	@Tags			Role
 //	@Accept			json
 //	@Produce		json
+//	@Success		200	{object}	dtos.CreateUpdateRoleResponse	"Successful response"
 //	@Security		ApiKeyAuth
-//	@Param			id	path	string	true	"ID"
+//	@Param			id	path	string	true	"Role ID"
 //	@Router			/role/{id} [get]
 func (r *RoleController) GetRoleById(ctx *gin.Context) {
 	uriId := dtos.UriUuid{}
@@ -51,8 +52,8 @@ func (r *RoleController) GetRoleById(ctx *gin.Context) {
 
 // GetRole godoc
 //
-//	@Summary		Get Role Data
-//	@Description	Get Role Data By Name
+//	@Summary		Get Role By Name
+//	@Description	Get Role By Name
 //	@Tags			Role
 //	@Accept			json
 //	@Produce		json
@@ -81,13 +82,14 @@ func (r *RoleController) GetRoleByName(ctx *gin.Context) {
 
 // GetRole godoc
 //
-//	@Summary		Get All Role Data
-//	@Description	Get All Role Data
+//	@Summary		Get List Role
+//	@Description	Get List Role
 //	@Tags			Role
 //	@Accept			json
 //	@Produce		json
 //	@Security		ApiKeyAuth
-//	@Param			name	query	dtos.CommonParam	true	"Parameters"
+//	@Success		200		{object}	[]dtos.CreateUpdateRoleResponse	"Successful response"
+//	@Param			name	query		dtos.CommonParam				true	"Parameters"
 //	@Router			/role [get]
 func (r *RoleController) GetRoles(ctx *gin.Context) {
 	conv := tools.Conversion{}
@@ -120,8 +122,8 @@ func (r *RoleController) GetRoles(ctx *gin.Context) {
 
 // GetRole godoc
 //
-//	@Summary		Get Role With Module Data
-//	@Description	Get Role With Module Data By Name
+//	@Summary		Get Role With Module By Name
+//	@Description	Get Role With Module By Name
 //	@Tags			Role
 //	@Accept			json
 //	@Produce		json
@@ -210,14 +212,14 @@ func (r *RoleController) PutRole(ctx *gin.Context) {
 
 // PutRoleSetModule godoc
 //
-//	@Summary		Update Role Data
-//	@Description	Update Role Data
+//	@Summary		Set Module for Role
+//	@Description	Set Module for Role
 //	@Tags			Role
 //	@Accept			json
 //	@Produce		json
 //	@Security		ApiKeyAuth
 //	@Param			id		path	string						true	"Parameters"
-//	@Param			request	body	dtos.RoleWithModuleRequest	true	"Role"
+//	@Param			request	body	dtos.RoleSetModuleRequest	true	"Role"
 //	@Router			/role/module/set/{id} [put]
 func (r *RoleController) PutRoleSetModule(ctx *gin.Context) {
 	roleId := dtos.UriUuid{}

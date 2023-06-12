@@ -278,7 +278,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Get All Role Data",
+                "description": "Get List Role",
                 "consumes": [
                     "application/json"
                 ],
@@ -288,7 +288,7 @@ const docTemplate = `{
                 "tags": [
                     "Role"
                 ],
-                "summary": "Get All Role Data",
+                "summary": "Get List Role",
                 "parameters": [
                     {
                         "type": "integer",
@@ -306,7 +306,17 @@ const docTemplate = `{
                         "in": "query"
                     }
                 ],
-                "responses": {}
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dtos.CreateUpdateRoleResponse"
+                            }
+                        }
+                    }
+                }
             },
             "post": {
                 "security": [
@@ -346,7 +356,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Update Role Data",
+                "description": "Set Module for Role",
                 "consumes": [
                     "application/json"
                 ],
@@ -356,7 +366,7 @@ const docTemplate = `{
                 "tags": [
                     "Role"
                 ],
-                "summary": "Update Role Data",
+                "summary": "Set Module for Role",
                 "parameters": [
                     {
                         "type": "string",
@@ -371,7 +381,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dtos.RoleWithModuleRequest"
+                            "$ref": "#/definitions/dtos.RoleSetModuleRequest"
                         }
                     }
                 ],
@@ -385,7 +395,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Get Role With Module Data By Name",
+                "description": "Get Role With Module By Name",
                 "consumes": [
                     "application/json"
                 ],
@@ -395,7 +405,7 @@ const docTemplate = `{
                 "tags": [
                     "Role"
                 ],
-                "summary": "Get Role With Module Data",
+                "summary": "Get Role With Module By Name",
                 "parameters": [
                     {
                         "type": "string",
@@ -415,7 +425,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Get Role Data By Name",
+                "description": "Get Role By Name",
                 "consumes": [
                     "application/json"
                 ],
@@ -425,7 +435,7 @@ const docTemplate = `{
                 "tags": [
                     "Role"
                 ],
-                "summary": "Get Role Data",
+                "summary": "Get Role By Name",
                 "parameters": [
                     {
                         "type": "string",
@@ -445,7 +455,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Get Role Data By ID",
+                "description": "Get Role By ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -455,17 +465,24 @@ const docTemplate = `{
                 "tags": [
                     "Role"
                 ],
-                "summary": "Get Role Data",
+                "summary": "Get Role By ID",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "ID",
+                        "description": "Role ID",
                         "name": "id",
                         "in": "path",
                         "required": true
                     }
                 ],
-                "responses": {}
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.CreateUpdateRoleResponse"
+                        }
+                    }
+                }
             },
             "put": {
                 "security": [
@@ -757,6 +774,26 @@ const docTemplate = `{
                 }
             }
         },
+        "dtos.CreateUpdateRoleResponse": {
+            "type": "object",
+            "properties": {
+                "createdDate": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "isActive": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updateDate": {
+                    "type": "string"
+                }
+            }
+        },
         "dtos.LoginRequest": {
             "type": "object",
             "properties": {
@@ -799,7 +836,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dtos.RoleWithModuleRequest": {
+        "dtos.RoleSetModuleRequest": {
             "type": "object",
             "properties": {
                 "modules": {
@@ -807,12 +844,6 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/dtos.RoleModule"
                     }
-                },
-                "roleId": {
-                    "type": "string"
-                },
-                "roleName": {
-                    "type": "string"
                 }
             }
         }

@@ -40,6 +40,19 @@ definitions:
     required:
     - name
     type: object
+  dtos.CreateUpdateRoleResponse:
+    properties:
+      createdDate:
+        type: string
+      id:
+        type: string
+      isActive:
+        type: boolean
+      name:
+        type: string
+      updateDate:
+        type: string
+    type: object
   dtos.LoginRequest:
     properties:
       password:
@@ -67,16 +80,12 @@ definitions:
     required:
     - moduleId
     type: object
-  dtos.RoleWithModuleRequest:
+  dtos.RoleSetModuleRequest:
     properties:
       modules:
         items:
           $ref: '#/definitions/dtos.RoleModule'
         type: array
-      roleId:
-        type: string
-      roleName:
-        type: string
     type: object
 info:
   contact:
@@ -250,7 +259,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get All Role Data
+      description: Get List Role
       parameters:
       - in: query
         name: limit
@@ -263,10 +272,16 @@ paths:
         type: string
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            items:
+              $ref: '#/definitions/dtos.CreateUpdateRoleResponse'
+            type: array
       security:
       - ApiKeyAuth: []
-      summary: Get All Role Data
+      summary: Get List Role
       tags:
       - Role
     post:
@@ -310,19 +325,23 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get Role Data By ID
+      description: Get Role By ID
       parameters:
-      - description: ID
+      - description: Role ID
         in: path
         name: id
         required: true
         type: string
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: Successful response
+          schema:
+            $ref: '#/definitions/dtos.CreateUpdateRoleResponse'
       security:
       - ApiKeyAuth: []
-      summary: Get Role Data
+      summary: Get Role By ID
       tags:
       - Role
     put:
@@ -353,7 +372,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get Role With Module Data By Name
+      description: Get Role With Module By Name
       parameters:
       - description: name
         in: path
@@ -365,14 +384,14 @@ paths:
       responses: {}
       security:
       - ApiKeyAuth: []
-      summary: Get Role With Module Data
+      summary: Get Role With Module By Name
       tags:
       - Role
   /role/module/set/{id}:
     put:
       consumes:
       - application/json
-      description: Update Role Data
+      description: Set Module for Role
       parameters:
       - description: Parameters
         in: path
@@ -384,20 +403,20 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/dtos.RoleWithModuleRequest'
+          $ref: '#/definitions/dtos.RoleSetModuleRequest'
       produces:
       - application/json
       responses: {}
       security:
       - ApiKeyAuth: []
-      summary: Update Role Data
+      summary: Set Module for Role
       tags:
       - Role
   /role/name/{name}:
     get:
       consumes:
       - application/json
-      description: Get Role Data By Name
+      description: Get Role By Name
       parameters:
       - description: Name
         in: path
@@ -409,7 +428,7 @@ paths:
       responses: {}
       security:
       - ApiKeyAuth: []
-      summary: Get Role Data
+      summary: Get Role By Name
       tags:
       - Role
   /user/:

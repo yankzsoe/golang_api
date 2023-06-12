@@ -145,23 +145,23 @@ func (r *RoleService) PutRoleSetModule(id dtos.UriUuid, role dtos.RoleSetModuleR
 	}
 
 	// Process the data in the model into a repository
-	err := r.roleRepository.UpdateSetRole(roleId, &modules)
+	result, err := r.roleRepository.UpdateSetRole(roleId, &modules)
 	if err != nil {
 		tools.ThrowException(http.StatusInternalServerError, err.Error())
 	}
 
-	result := dtos.RoleSetModuleResponse{}
-	for _, module := range modules {
-		result.Modules = append(result.Modules, dtos.ModuleDetail{
-			ModuleId:  module.ID,
-			CanRead:   module.CanRead,
-			CanCreate: module.CanCreate,
-			CanUpdate: module.CanUpdate,
-			CanDelete: module.CanDelete,
-		})
-	}
+	// result := dtos.RoleSetModuleResponse{}
+	// for _, module := range modules {
+	// 	result.Modules = append(result.Modules, dtos.ModuleDetail{
+	// 		ModuleId:  module.ID,
+	// 		CanRead:   module.CanRead,
+	// 		CanCreate: module.CanCreate,
+	// 		CanUpdate: module.CanUpdate,
+	// 		CanDelete: module.CanDelete,
+	// 	})
+	// }
 
-	return &result
+	return result
 }
 
 func (r *RoleService) DeleteRole(id dtos.UriUuid) *dtos.CreateUpdateRoleResponse {

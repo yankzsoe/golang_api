@@ -14,3 +14,14 @@ type ModuleDetail struct {
 	CanUpdate  bool   `json:"canUpdate"`
 	CanDelete  bool   `json:"canDelete"`
 }
+
+type RoleSetModuleScanRows struct {
+	RoleId     string `json:"role_id"`
+	RoleName   string `json:"role_name"`
+	ModuleId   string `json:"module_id"`
+	ModuleName string `json:"module_name"`
+	CanRead    bool   `json:"can_read"`
+	CanCreate  bool   `json:"can_create"`
+	CanUpdate  bool   `json:"can_update"`
+	CanDelete  bool   `json:"can_delete"`
+}

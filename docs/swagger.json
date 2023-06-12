@@ -266,7 +266,7 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Get All Role Data",
+                "description": "Get List Role",
                 "consumes": [
                     "application/json"
                 ],
@@ -276,7 +276,7 @@
                 "tags": [
                     "Role"
                 ],
-                "summary": "Get All Role Data",
+                "summary": "Get List Role",
                 "parameters": [
                     {
                         "type": "integer",
@@ -294,7 +294,17 @@
                         "in": "query"
                     }
                 ],
-                "responses": {}
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dtos.CreateUpdateRoleResponse"
+                            }
+                        }
+                    }
+                }
             },
             "post": {
                 "security": [
@@ -334,7 +344,7 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Update Role Data",
+                "description": "Set Module for Role",
                 "consumes": [
                     "application/json"
                 ],
@@ -344,7 +354,7 @@
                 "tags": [
                     "Role"
                 ],
-                "summary": "Update Role Data",
+                "summary": "Set Module for Role",
                 "parameters": [
                     {
                         "type": "string",
@@ -359,7 +369,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dtos.RoleWithModuleRequest"
+                            "$ref": "#/definitions/dtos.RoleSetModuleRequest"
                         }
                     }
                 ],
@@ -373,7 +383,7 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Get Role With Module Data By Name",
+                "description": "Get Role With Module By Name",
                 "consumes": [
                     "application/json"
                 ],
@@ -383,7 +393,7 @@
                 "tags": [
                     "Role"
                 ],
-                "summary": "Get Role With Module Data",
+                "summary": "Get Role With Module By Name",
                 "parameters": [
                     {
                         "type": "string",
@@ -403,7 +413,7 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Get Role Data By Name",
+                "description": "Get Role By Name",
                 "consumes": [
                     "application/json"
                 ],
@@ -413,7 +423,7 @@
                 "tags": [
                     "Role"
                 ],
-                "summary": "Get Role Data",
+                "summary": "Get Role By Name",
                 "parameters": [
                     {
                         "type": "string",
@@ -433,7 +443,7 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Get Role Data By ID",
+                "description": "Get Role By ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -443,17 +453,24 @@
                 "tags": [
                     "Role"
                 ],
-                "summary": "Get Role Data",
+                "summary": "Get Role By ID",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "ID",
+                        "description": "Role ID",
                         "name": "id",
                         "in": "path",
                         "required": true
                     }
                 ],
-                "responses": {}
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.CreateUpdateRoleResponse"
+                        }
+                    }
+                }
             },
             "put": {
                 "security": [
@@ -745,6 +762,26 @@
                 }
             }
         },
+        "dtos.CreateUpdateRoleResponse": {
+            "type": "object",
+            "properties": {
+                "createdDate": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "isActive": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updateDate": {
+                    "type": "string"
+                }
+            }
+        },
         "dtos.LoginRequest": {
             "type": "object",
             "properties": {
@@ -787,7 +824,7 @@
                 }
             }
         },
-        "dtos.RoleWithModuleRequest": {
+        "dtos.RoleSetModuleRequest": {
             "type": "object",
             "properties": {
                 "modules": {
@@ -795,12 +832,6 @@
                     "items": {
                         "$ref": "#/definitions/dtos.RoleModule"
                     }
-                },
-                "roleId": {
-                    "type": "string"
-                },
-                "roleName": {
-                    "type": "string"
                 }
             }
         }
