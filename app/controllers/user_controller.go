@@ -53,10 +53,7 @@ func (ctrl *UserController) GetUser(ctx *gin.Context) {
 		RoleId:      result.RoleId,
 	}
 
-	response := dtos.Response{
-		Status: dtos.BaseResponse{true, "Successfully"},
-		Data:   user,
-	}
+	response := tools.CreateSuccessResponseWithData(user)
 
 	ctx.JSON(http.StatusOK, response)
 }
@@ -102,10 +99,7 @@ func (ctrl *UserController) GetAllUser(ctx *gin.Context) {
 		})
 	}
 
-	response := dtos.Response{
-		Status: dtos.BaseResponse{true, "Successfully"},
-		Data:   users,
-	}
+	response := tools.CreateSuccessResponseWithData(users)
 
 	ctx.JSON(http.StatusOK, response)
 }
@@ -124,22 +118,12 @@ func (ctrl *UserController) PostUser(ctx *gin.Context) {
 	req := dtos.CreateOrUpdateUserRequest{}
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		errMsg := tools.GenerateErrorMessageV2(err)
-		response := dtos.Response{
-			Status: dtos.BaseResponse{false, "Failed On Falidation"},
-			Data:   errMsg,
-		}
-		ctx.JSON(http.StatusBadRequest, response)
-		return
+		tools.ThrowExceptionOnValidation(http.StatusBadRequest, errMsg)
 	}
 
 	if err := req.Validate(); err != nil {
 		errMsg := tools.GenerateErrorMessageV2(err)
-		response := dtos.Response{
-			Status: dtos.BaseResponse{false, "Failed On Falidation"},
-			Data:   errMsg,
-		}
-		ctx.JSON(http.StatusBadRequest, response)
-		return
+		tools.ThrowExceptionOnValidation(http.StatusBadRequest, errMsg)
 	}
 
 	m := models.UserModel{
@@ -166,10 +150,7 @@ func (ctrl *UserController) PostUser(ctx *gin.Context) {
 		RoleId:      result.RoleId,
 	}
 
-	response := dtos.Response{
-		Status: dtos.BaseResponse{true, "Successfully"},
-		Data:   createdUser,
-	}
+	response := tools.CreateSuccessResponseWithData(createdUser)
 
 	ctx.JSON(http.StatusCreated, response)
 }
@@ -192,36 +173,21 @@ func (ctrl *UserController) PutUser(ctx *gin.Context) {
 	uriUuid := dtos.UriUuid{}
 	if err := ctx.ShouldBindUri(&uriUuid); err != nil {
 		errMsg := tools.GenerateErrorMessageV2(err)
-		response := dtos.Response{
-			Status: dtos.BaseResponse{false, "Failed On Validation"},
-			Data:   errMsg,
-		}
-		ctx.JSON(http.StatusBadRequest, response)
-		return
+		tools.ThrowExceptionOnValidation(http.StatusBadRequest, errMsg)
 	}
 
 	if err := req.Validate(); err != nil {
 		errMsg := tools.GenerateErrorMessageV2(err)
-		response := dtos.Response{
-			Status: dtos.BaseResponse{false, "Failed On Validation"},
-			Data:   errMsg,
-		}
-		ctx.JSON(http.StatusBadRequest, response)
-		return
+		tools.ThrowExceptionOnValidation(http.StatusBadRequest, errMsg)
 	}
 
 	err := ctrl.service.UpdateUser(uriUuid.Id, req)
 	if err != nil {
-		response := dtos.Response{
-			Status: dtos.BaseResponse{false, err.Error()},
-		}
-		ctx.JSON(http.StatusInternalServerError, response)
+		tools.ThrowException(http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	response := dtos.Response{
-		Status: dtos.BaseResponse{true, "Update Successfully"},
-	}
+	response := tools.CreateSuccessResponse()
 
 	ctx.JSON(http.StatusOK, response)
 }
@@ -240,26 +206,15 @@ func (ctrl *UserController) DeleteUser(ctx *gin.Context) {
 	uriUuid := dtos.UriUuid{}
 	if err := ctx.ShouldBindUri(&uriUuid); err != nil {
 		errMsg := tools.GenerateErrorMessageV2(err)
-		response := dtos.Response{
-			Status: dtos.BaseResponse{false, "Failed On Validation"},
-			Data:   errMsg,
-		}
-		ctx.JSON(http.StatusBadRequest, response)
-		return
+		tools.ThrowExceptionOnValidation(http.StatusBadRequest, errMsg)
 	}
 
 	err := ctrl.service.DeleteUser(uriUuid.Id)
 	if err != nil {
-		response := dtos.Response{
-			Status: dtos.BaseResponse{false, err.Error()},
-		}
-		ctx.JSON(http.StatusInternalServerError, response)
-		return
+		tools.ThrowExceptionOnValidation(http.StatusBadRequest, err.Error())
 	}
 
-	response := dtos.Response{
-		Status: dtos.BaseResponse{true, "Delete Successfully"},
-	}
+	response := tools.CreateSuccessResponse()
 
 	ctx.JSON(http.StatusOK, response)
 }
