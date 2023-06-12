@@ -8,6 +8,7 @@ import (
 	"golang_api/app/dtos"
 	"golang_api/app/models"
 	config "golang_api/configs"
+	"golang_api/tools"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -39,38 +40,62 @@ func (repo *UserRepository) Create(user *models.UserModel) (*models.UserModel, e
 	return user, nil
 }
 
-func (repo *UserRepository) FindAll(param dtos.CommonParam) (*[]models.UserModel, error) {
-	var user []models.UserModel
-	result := repo.DB.Where("LOWER(username) LIKE ?", "%"+strings.ToLower(param.Where)+"%").Limit(param.Limit).Offset(param.Offset).Find(&user)
-	if result.Error != nil {
-		panic(dtos.ErrorResponse{
-			ErrorCode: http.StatusInternalServerError,
-			Message: dtos.Response{
-				Status: dtos.BaseResponse{
-					Success: false,
-					Message: "failed to find user",
-				},
-			},
+func (repo *UserRepository) FindAll(param dtos.CommonParam) *[]dtos.GetUserResponse {
+	results := []dtos.GetUserResponse{}
+
+	rows, err := repo.DB.Raw("SELECT us.\"id\", us.username, us.nickname, us.email, us.created_date, us.updated_date, ro.role_id, ro.role_name"+
+		" FROM \"users\" us"+
+		" JOIN \"role\" ro ON us.role_id = ro.role_id"+
+		" WHERE LOWER(us.username) LIKE ?", "%"+strings.ToLower(param.Where)+"%").Rows()
+	if err != nil {
+		tools.ThrowException(http.StatusInternalServerError, err.Error())
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		scanRows := dtos.GetUserResponse{}
+		err := repo.DB.ScanRows(rows, &scanRows)
+		if err != nil {
+			tools.ThrowException(http.StatusInternalServerError, err.Error())
+		}
+
+		results = append(results, dtos.GetUserResponse{
+			Id:          scanRows.Id,
+			Username:    scanRows.Username,
+			Nickname:    scanRows.Nickname,
+			Email:       scanRows.Email,
+			CreatedDate: scanRows.CreatedDate,
+			UpdatedDate: scanRows.UpdatedDate,
+			RoleId:      scanRows.RoleId,
+			RoleName:    scanRows.RoleName,
 		})
 	}
-	return &user, nil
+
+	return &results
 }
 
-func (repo *UserRepository) FindByID(id string) (*models.UserModel, error) {
-	var user models.UserModel
-	result := repo.DB.Where("id = ?", id).Find(&user)
-	if result.Error != nil {
-		panic(dtos.ErrorResponse{
-			ErrorCode: http.StatusInternalServerError,
-			Message: dtos.Response{
-				Status: dtos.BaseResponse{
-					Success: false,
-					Message: "failed to find user",
-				},
-			},
-		})
+func (repo *UserRepository) FindByID(id string) *dtos.GetUserResponse {
+	var results dtos.GetUserResponse
+	rows, err := repo.DB.Raw("SELECT us.\"id\", us.username, us.nickname, us.email, us.created_date, us.updated_date, ro.role_id, ro.role_name"+
+		" FROM \"users\" us"+
+		" JOIN \"role\" ro ON us.role_id = ro.role_id"+
+		" WHERE us.\"id\" = ?", id).Rows()
+
+	if err != nil {
+		tools.ThrowException(http.StatusInternalServerError, err.Error())
 	}
-	return &user, nil
+
+	defer rows.Close()
+
+	for rows.Next() {
+		err := repo.DB.ScanRows(rows, &results)
+		if err != nil {
+			tools.ThrowException(http.StatusInternalServerError, err.Error())
+		}
+	}
+
+	return &results
 }
 
 func (repo *UserRepository) Update(userId string, user dtos.CreateOrUpdateUserRequest) error {

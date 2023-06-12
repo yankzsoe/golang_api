@@ -28,11 +28,11 @@ func (u *UserService) CreateUser(user *models.UserModel) (*models.UserModel, err
 	return u.userRepository.Create(user)
 }
 
-func (u *UserService) GetUserByID(userID string) (*models.UserModel, error) {
+func (u *UserService) GetUserByID(userID string) *dtos.GetUserResponse {
 	return u.userRepository.FindByID(userID)
 }
 
-func (u *UserService) GetAllUser(param dtos.CommonParam) (*[]models.UserModel, error) {
+func (u *UserService) GetAllUser(param dtos.CommonParam) *[]dtos.GetUserResponse {
 	return u.userRepository.FindAll(param)
 }
 

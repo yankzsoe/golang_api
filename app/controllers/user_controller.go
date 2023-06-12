@@ -38,22 +38,14 @@ func (ctrl *UserController) GetUser(ctx *gin.Context) {
 		tools.ThrowExceptionOnValidation(http.StatusBadRequest, errMsg)
 	}
 
-	result, err := ctrl.service.GetUserByID(uriUuid.Id)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	result := ctrl.service.GetUserByID(uriUuid.Id)
+	if result == nil || len(result.Id) == 0 {
+		resp := tools.CreateNotFoundResponse()
+		ctx.JSON(http.StatusNotFound, resp)
+		return
 	}
 
-	user := dtos.CreateUserResponse{
-		Id:          result.Id,
-		Username:    result.Username,
-		Nickname:    result.Nickname,
-		Email:       result.Email,
-		CreatedDate: result.CreatedDate,
-		UpdatedDate: result.UpdatedDate,
-		RoleId:      result.RoleId,
-	}
-
-	response := tools.CreateSuccessResponseWithData(user)
+	response := tools.CreateSuccessResponseWithData(result)
 
 	ctx.JSON(http.StatusOK, response)
 }
@@ -80,26 +72,14 @@ func (ctrl *UserController) GetAllUser(ctx *gin.Context) {
 		Offset: conv.StrToInt(ctx.Query("offset")),
 	}
 
-	result, err := ctrl.service.GetAllUser(req)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	result := ctrl.service.GetAllUser(req)
+	if len(*result) == 0 {
+		resp := tools.CreateNotFoundResponse()
+		ctx.JSON(http.StatusNotFound, resp)
 		return
 	}
 
-	users := []dtos.CreateUserResponse{}
-	for _, user := range *result {
-		users = append(users, dtos.CreateUserResponse{
-			Id:          user.Id,
-			Username:    user.Username,
-			Nickname:    user.Nickname,
-			Email:       user.Email,
-			CreatedDate: user.CreatedDate,
-			UpdatedDate: user.UpdatedDate,
-			RoleId:      user.RoleId,
-		})
-	}
-
-	response := tools.CreateSuccessResponseWithData(users)
+	response := tools.CreateSuccessResponseWithData(result)
 
 	ctx.JSON(http.StatusOK, response)
 }
