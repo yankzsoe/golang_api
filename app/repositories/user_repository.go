@@ -136,7 +136,7 @@ func (repo *UserRepository) Delete(userId string) error {
 
 	if user.Id == "" {
 		panic(dtos.ErrorResponse{
-			ErrorCode: http.StatusInternalServerError,
+			ErrorCode: http.StatusNotFound,
 			Message: dtos.Response{
 				Status: dtos.BaseResponse{
 					Success: false,
