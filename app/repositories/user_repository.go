@@ -46,7 +46,7 @@ func (repo *UserRepository) FindAll(param dtos.CommonParam) *[]dtos.GetUserRespo
 	rows, err := repo.DB.Raw("SELECT us.\"id\", us.username, us.nickname, us.email, us.created_date, us.updated_date, ro.role_id, ro.role_name"+
 		" FROM \"users\" us"+
 		" JOIN \"role\" ro ON us.role_id = ro.role_id"+
-		" WHERE LOWER(us.username) LIKE ?", "%"+strings.ToLower(param.Where)+"%").Rows()
+		" WHERE deleted_date IS NULL AND LOWER(us.username) LIKE ?", "%"+strings.ToLower(param.Where)+"%").Rows()
 	if err != nil {
 		tools.ThrowException(http.StatusInternalServerError, err.Error())
 	}
@@ -80,7 +80,7 @@ func (repo *UserRepository) FindByID(id string) *dtos.GetUserResponse {
 	rows, err := repo.DB.Raw("SELECT us.\"id\", us.username, us.nickname, us.email, us.created_date, us.updated_date, ro.role_id, ro.role_name"+
 		" FROM \"users\" us"+
 		" JOIN \"role\" ro ON us.role_id = ro.role_id"+
-		" WHERE us.\"id\" = ?", id).Rows()
+		" WHERE deleted_date IS NULL AND us.\"id\" = ?", id).Rows()
 
 	if err != nil {
 		tools.ThrowException(http.StatusInternalServerError, err.Error())
@@ -151,7 +151,7 @@ func (repo *UserRepository) Delete(userId string) error {
 
 func (repo *UserRepository) FindByUsernameOrEmail(username string) (*models.UserModel, error) {
 	var user models.UserModel
-	result := repo.DB.Where("username = ? OR email = ?", username, username).Find(&user)
+	result := repo.DB.Where("deleted_date IS NULL AND (username = ? OR email = ?)", username, username).Find(&user)
 	if result.Error != nil {
 		// return nil, errors.New("failed to find user")
 		panic(dtos.ErrorResponse{
@@ -174,7 +174,7 @@ func (repo *UserRepository) FindByUsernameOrEmailWithRole(username string) (*[]d
 		" JOIN \"role\" r ON r.role_id = u.role_id"+
 		" JOIN role_module rm ON rm.role_id = r.role_id"+
 		" JOIN \"module\" m ON m.module_id = rm.module_id"+
-		" WHERE u.username = ? OR u.email = ?", username, username).Rows()
+		" WHERE u.deleted_date IS NULL AND (u.username = ? OR u.email = ?)", username, username).Rows()
 
 	if err != nil {
 		return nil, err
@@ -208,7 +208,7 @@ func (repo *UserRepository) FindByIdWithRole(id string) (*[]dtos.UserWithClaimsR
 		" JOIN \"role\" r ON r.role_id = u.role_id"+
 		" JOIN role_module rm ON rm.role_id = r.role_id"+
 		" JOIN \"module\" m ON m.module_id = rm.module_id"+
-		" WHERE u.Id = ?", id).Rows()
+		" WHERE u.deleted_date IS NULL AND u.Id = ?", id).Rows()
 
 	if err != nil {
 		return nil, err
