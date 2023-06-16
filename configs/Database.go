@@ -36,6 +36,8 @@ func InitDB() {
 
 		db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 			Logger: customLogger,
+			SkipDefaultTransaction: true,
+			PrepareStmt:            true,
 			NamingStrategy: schema.NamingStrategy{
 				SingularTable: true,
 			},
