@@ -116,8 +116,7 @@ func (ctrl *UserController) PostUser(ctx *gin.Context) {
 
 	result, err := ctrl.service.CreateUser(&m)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+		tools.ThrowException(http.StatusInternalServerError, err.Error())
 	}
 
 	createdUser := dtos.CreateUserResponse{
@@ -164,7 +163,6 @@ func (ctrl *UserController) PutUser(ctx *gin.Context) {
 	err := ctrl.service.UpdateUser(uriUuid.Id, req)
 	if err != nil {
 		tools.ThrowException(http.StatusInternalServerError, err.Error())
-		return
 	}
 
 	response := tools.CreateSuccessResponse()
