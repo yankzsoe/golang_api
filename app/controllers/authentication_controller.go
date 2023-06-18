@@ -39,11 +39,12 @@ func (ctrl *AuthenticationController) Login(ctx *gin.Context) {
 
 	statusCode, token, err := ctrl.service.Login(req)
 	if err != nil {
-		ctx.JSON(statusCode, gin.H{"error": err.Error()})
-		return
+		tools.ThrowException(statusCode, err.Error())
 	}
 
-	ctx.JSON(statusCode, gin.H{"data": token})
+	response := tools.CreateSuccessResponseWithData(token)
+
+	ctx.JSON(statusCode, response)
 }
 
 func (ctrl *AuthenticationController) Oauth2Login(ctx *gin.Context) {
@@ -57,8 +58,7 @@ func (ctrl *AuthenticationController) Callback(ctx *gin.Context) {
 
 	statusCode, token, err := ctrl.service.LoginOAuthGoogle(userInfo)
 	if err != nil {
-		ctx.JSON(statusCode, gin.H{"error": err.Error()})
-		return
+		tools.ThrowException(statusCode, err.Error())
 	}
 
 	ctx.JSON(statusCode, gin.H{"data": token})
@@ -77,14 +77,16 @@ func (ctrl *AuthenticationController) RefeshToken(ctx *gin.Context) {
 	req := dtos.RefreshTokenRequest{}
 
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		panic(err)
+		errMsg := tools.GenerateErrorMessageV2(err)
+		tools.ThrowExceptionOnValidation(http.StatusBadRequest, errMsg)
 	}
 
 	statusCode, token, err := ctrl.service.RefreshToken(req)
 	if err != nil {
-		ctx.JSON(statusCode, gin.H{"error": err.Error()})
-		return
+		tools.ThrowException(statusCode, err.Error())
 	}
 
-	ctx.JSON(statusCode, gin.H{"data": token})
+	response := tools.CreateSuccessResponseWithData(token)
+
+	ctx.JSON(statusCode, response)
 }
