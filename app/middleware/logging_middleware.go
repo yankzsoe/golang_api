@@ -18,6 +18,9 @@ func (l *LoggerMiddleware) Logger() gin.HandlerFunc {
 
 		// after request
 		latency := time.Since(t)
-		log.Printf("Letency: %s", latency)
+		// only processes that last longer than 5 seconds will be written in the log.
+		if latency.Seconds() > 5 {
+			log.Printf("Letency: %v", latency)
+		}
 	}
 }
