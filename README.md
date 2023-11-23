@@ -9,6 +9,7 @@
 - jwt
 - check token on middleware
 - error handling on middleware
+- validation v10
 - read latency request on middleware
 - this api for user management
 - router group
