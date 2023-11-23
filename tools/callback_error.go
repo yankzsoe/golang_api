@@ -23,6 +23,10 @@ func readErrorBasedOnTags(fe validator.FieldError) string {
 		return "Invalid Email"
 	case "uuid":
 		return "Invalid UUID Format"
+	case "uuid4":
+		return "Invalid UUID4 Format"
+	case "uuid4_rfc4122":
+		return "Invalid UUID Format"
 	case "eqfield":
 		return "Value not matched"
 	case "jwt":

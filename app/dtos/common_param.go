@@ -7,7 +7,7 @@ type CommonParam struct {
 }
 
 type UriUuid struct {
-	Id string `uri:"id" binding:"required,uuid"`
+	Id string `uri:"id" binding:"required,uuid4_rfc4122"`
 }
 
 type UriName struct {
