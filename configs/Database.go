@@ -5,7 +5,7 @@ import (
 	"os"
 	"sync"
 
-	"gorm.io/driver/postgres"
+	"gorm.io/driver/sqlserver"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
@@ -25,19 +25,21 @@ func InitDB() {
 	onceDb.Do(func() {
 		// Create connection to postgres
 		// url := os.Getenv("externalurl")
-		dbhost := os.Getenv("dbhost")
-		dbname := os.Getenv("dbname")
-		dbpassword := os.Getenv("dbpassword")
-		dbusername := os.Getenv("dbusername")
-		dbport := os.Getenv("dbport")
-		dsn := "host=" + dbhost + " user=" + dbusername + " password=" + dbpassword + " dbname=" + dbname + " port=" + dbport
+		/*
+			dbhost := os.Getenv("dbhost")
+			dbname := os.Getenv("dbname")
+			dbpassword := os.Getenv("dbpassword")
+			dbusername := os.Getenv("dbusername")
+			dbport := os.Getenv("dbport")
+			dsn := "host=" + dbhost + " user=" + dbusername + " password=" + dbpassword + " dbname=" + dbname + " port=" + dbport
+		*/
+
+		dsn := os.Getenv("sqlserver")
 
 		log.Println(dsn)
 
-		db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		db, err := gorm.Open(sqlserver.Open(dsn), &gorm.Config{
 			Logger: customLogger,
-			SkipDefaultTransaction: true,
-			PrepareStmt:            true,
 			NamingStrategy: schema.NamingStrategy{
 				SingularTable: true,
 			},

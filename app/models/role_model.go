@@ -3,7 +3,7 @@ package models
 import "time"
 
 type RoleModel struct {
-	ID          string     `gorm:"column:role_id;primaryKey;type:uuid;default:gen_random_uuid()"`
+	ID          string     `gorm:"column:role_id;primaryKey;type:string;default:newid()"`
 	Name        string     `gorm:"column:role_name;index;unique;not null;size:100"`
 	IsActive    bool       `gorm:"column:is_active;not null;"`
 	CreatedDate time.Time  `gorm:"column:created_date;autoCreateTime:true;"`

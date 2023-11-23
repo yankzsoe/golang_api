@@ -3,7 +3,7 @@ package tools
 import (
 	"context"
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"log"
 	"os"
 
@@ -44,7 +44,7 @@ func GetUserInfo(code string) UserInfoResponse {
 	defer resp.Body.Close()
 
 	// Baca respons body sebagai []byte
-	userInfo, err := ioutil.ReadAll(resp.Body)
+	userInfo, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Println("Error reading user info:", err)
 		panic(err)
