@@ -4,7 +4,9 @@ import (
 	"log"
 	"os"
 	"sync"
+	"time"
 
+	"github.com/cenkalti/backoff/v4"
 	"gorm.io/driver/sqlserver"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -36,29 +38,38 @@ func InitDB() {
 
 		dsn := os.Getenv("sqlserver")
 
-		log.Println(dsn)
+		// log.Println(dsn)
+		var db *gorm.DB
+		var err error
 
-		db, err := gorm.Open(sqlserver.Open(dsn), &gorm.Config{
-			Logger: customLogger,
-			NamingStrategy: schema.NamingStrategy{
-				SingularTable: true,
-			},
-		})
+		connectingToDb := func() error {
+			db, err = gorm.Open(sqlserver.Open(dsn), &gorm.Config{
+				Logger: customLogger,
+				NamingStrategy: schema.NamingStrategy{
+					SingularTable: true,
+				},
+			})
 
-		if err != nil {
-			log.Fatal("Error when try connecting to database: ", err.Error())
-			panic(err)
+			if err != nil {
+				log.Fatal("Error when try connecting to database: ", err.Error())
+				return err
+			}
+
+			// Active debug mode
+			// db.Debug()
+
+			DB = db
+			return nil
 		}
 
-		// Active debug mode
-		// db.Debug()
+		b := backoff.NewExponentialBackOff()
+		b.MaxElapsedTime = 15 * time.Second
 
-		// if err != nil {
-		// 	log.Fatal("Error when open connection to database: ", err.Error())
-		// 	panic(err)
-		// }
-
-		DB = db
+		err = backoff.Retry(connectingToDb, b)
+		if err != nil {
+			log.Fatalln("Max retry reached, cannot connect to the database: ", err.Error())
+			panic(err)
+		}
 	})
 }
 
