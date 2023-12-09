@@ -6,6 +6,7 @@ import (
 	"golang_api/routers"
 	"net/http"
 	"os"
+	"strings"
 
 	"golang_api/docs"
 	"golang_api/migrations"
@@ -18,14 +19,14 @@ var (
 	Environment string
 )
 
-//	@contact.name				API Support
-//	@contact.url				https://www.linkedin.com/in/yayang-suryana-308a5213a/
-//	@contact.email				yankzsoe@gmail.com
-//	@license.name				Apache 2.0
-//	@license.url				http://www.apache.org/licenses/LICENSE-2.0.html
-//	@securityDefinitions.apikey	ApiKeyAuth
-//	@in							header
-//	@name						Authorization
+// @contact.name				API Support
+// @contact.url				https://www.linkedin.com/in/yayang-suryana-308a5213a/
+// @contact.email				yankzsoe@gmail.com
+// @license.name				Apache 2.0
+// @license.url				http://www.apache.org/licenses/LICENSE-2.0.html
+// @securityDefinitions.apikey	ApiKeyAuth
+// @in							header
+// @name						Authorization
 func main() {
 	// Setup GIN in release mode
 	gin.SetMode(gin.ReleaseMode)
@@ -67,9 +68,14 @@ func main() {
 }
 
 func GetVersion(ctx *gin.Context) {
+	schema := "http"
+	if strings.Contains(ctx.Request.Proto, "HTTPS") {
+		schema = "https"
+	}
+
 	ctx.JSON(http.StatusOK, gin.H{
 		"status":     "OK",
 		"apiVersion": &ApiVersion,
-		"message":    "Please visit https://golang-api-6ej0.onrender.com/swagger/index.html for more documentation.",
+		"message":    "Please visit " + schema + "://" + ctx.Request.Host + "/swagger/index.html for more documentation.",
 	})
 }
