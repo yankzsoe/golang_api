@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
-	"gorm.io/driver/sqlserver"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
@@ -27,23 +27,22 @@ func InitDB() {
 	onceDb.Do(func() {
 		// Create connection to postgres
 		// url := os.Getenv("externalurl")
-		/*
-			dbhost := os.Getenv("dbhost")
-			dbname := os.Getenv("dbname")
-			dbpassword := os.Getenv("dbpassword")
-			dbusername := os.Getenv("dbusername")
-			dbport := os.Getenv("dbport")
-			dsn := "host=" + dbhost + " user=" + dbusername + " password=" + dbpassword + " dbname=" + dbname + " port=" + dbport
-		*/
 
-		dsn := os.Getenv("sqlserver")
+		dbhost := os.Getenv("dbhost")
+		dbname := os.Getenv("dbname")
+		dbpassword := os.Getenv("dbpassword")
+		dbusername := os.Getenv("dbusername")
+		dbport := os.Getenv("dbport")
+		dsn := "host=" + dbhost + " user=" + dbusername + " password=" + dbpassword + " dbname=" + dbname + " port=" + dbport
+
+		// dsn := os.Getenv("sqlserver")
 
 		// log.Println(dsn)
 		var db *gorm.DB
 		var err error
 
 		connectingToDb := func() error {
-			db, err = gorm.Open(sqlserver.Open(dsn), &gorm.Config{
+			db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
 				Logger: customLogger,
 				NamingStrategy: schema.NamingStrategy{
 					SingularTable: true,
