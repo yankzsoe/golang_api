@@ -93,8 +93,8 @@ info:
     name: API Support
     url: https://www.linkedin.com/in/yayang-suryana-308a5213a/
   license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+    name: Source Code
+    url: https://github.com/yankzsoe/golang_api
 paths:
   /auth/refreshToken:
     post:

@@ -16,8 +16,8 @@ const docTemplate = `{
             "email": "yankzsoe@gmail.com"
         },
         "license": {
-            "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+            "name": "Source Code",
+            "url": "https://github.com/yankzsoe/golang_api"
         },
         "version": "{{.Version}}"
     },

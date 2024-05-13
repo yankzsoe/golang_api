@@ -19,14 +19,14 @@ var (
 	Environment string
 )
 
-// @contact.name				API Support
-// @contact.url				https://www.linkedin.com/in/yayang-suryana-308a5213a/
-// @contact.email				yankzsoe@gmail.com
-// @license.name				Source Code
-// @license.url				https://github.com/yankzsoe/golang_api
-// @securityDefinitions.apikey	ApiKeyAuth
-// @in							header
-// @name						Authorization
+//	@contact.name				API Support
+//	@contact.url				https://www.linkedin.com/in/yayang-suryana-308a5213a/
+//	@contact.email				yankzsoe@gmail.com
+//	@license.name				Source Code
+//	@license.url				https://github.com/yankzsoe/golang_api
+//	@securityDefinitions.apikey	ApiKeyAuth
+//	@in							header
+//	@name						Authorization
 func main() {
 	// Setup GIN in release mode
 	gin.SetMode(gin.ReleaseMode)
