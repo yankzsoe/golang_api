@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	config "golang_api/configs"
 	"golang_api/routers"
 	"net/http"
@@ -12,6 +13,7 @@ import (
 	"golang_api/migrations"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 var (
@@ -19,18 +21,25 @@ var (
 	Environment string
 )
 
-//	@contact.name				API Support
 //	@contact.url				https://www.linkedin.com/in/yayang-suryana-308a5213a/
 //	@contact.email				yankzsoe@gmail.com
-//	@license.name				Source Code
-//	@license.url				https://github.com/yankzsoe/golang_api
-//	@securityDefinitions.apikey	ApiKeyAuth
-//	@in							header
-//	@name						Authorization
+// @contact.name				API Support
+// @contact.url				https://www.linkedin.com/in/yayang-suryana-308a5213a/
+// @contact.email				yankzsoe@gmail.com
+// @license.name				Source Code
+// @license.url				https://github.com/yankzsoe/golang_api
+// @securityDefinitions.apikey	ApiKeyAuth
+// @in							header
+// @name						Authorization
 func main() {
 	// Setup GIN in release mode
 	gin.SetMode(gin.ReleaseMode)
 
+	// Load environment file
+	err := godotenv.Load(".env")
+	if err != nil {
+		fmt.Print("Error loading .env file")
+	}
 	// Read flag from -ldflag
 	flag.Parse()
 
