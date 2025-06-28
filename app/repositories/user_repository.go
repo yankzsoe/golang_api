@@ -174,7 +174,7 @@ func (repo *UserRepository) FindByUsernameOrEmailWithRole(username string) (*[]d
 		" JOIN \"role\" r ON r.role_id = u.role_id"+
 		" JOIN role_module rm ON rm.role_id = r.role_id"+
 		" JOIN \"module\" m ON m.module_id = rm.module_id"+
-		" WHERE u.deleted_date IS NULL AND (u.username = ? OR u.email = ?)", username, username).Rows()
+		" WHERE u.deleted_date IS NULL AND (u.username = ? OR u.email = ?) AND rm.is_active = true", username, username).Rows()
 
 	if err != nil {
 		return nil, err
