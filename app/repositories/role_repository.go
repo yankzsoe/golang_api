@@ -53,7 +53,7 @@ func (repo *RoleReporitory) FindByName(name string) *[]models.RoleModel {
 
 func (repo *RoleReporitory) FindRoleWithModule(name string) *dtos.RoleWithModuleResponse {
 	queryResult := dtos.RoleWithModuleResponse{}
-	rows, err := repo.DB.Raw("SELECT r.role_id, r.role_name, mm.module_id, mm.module_name"+
+	rows, err := repo.DB.Raw("SELECT r.role_id, r.role_code, r.role_name, mm.module_code, mm.module_id, mm.module_name"+
 		" FROM \"role\" r"+
 		" LEFT JOIN \"role_module\" rm ON r.role_id = rm.role_id"+
 		" LEFT JOIN \"module\" mm ON rm.module_id = mm.module_id"+
@@ -73,16 +73,19 @@ func (repo *RoleReporitory) FindRoleWithModule(name string) *dtos.RoleWithModule
 
 		if len(queryResult.Modules) == 0 {
 			queryResult.RoleId = data.RoleId
+			queryResult.RoleCode = data.RoleCode
 			queryResult.RoleName = data.RoleName
 			if len(data.ModuleId) > 0 {
 				queryResult.Modules = append(queryResult.Modules, dtos.Module{
 					ModuleId:   data.ModuleId,
+					ModuleCode: data.ModuleCode,
 					ModuleName: data.ModuleName,
 				})
 			}
 		} else {
 			queryResult.Modules = append(queryResult.Modules, dtos.Module{
 				ModuleId:   data.ModuleId,
+				ModuleCode: data.ModuleCode,
 				ModuleName: data.ModuleName,
 			})
 		}

@@ -169,7 +169,7 @@ func (repo *UserRepository) FindByUsernameOrEmail(username string) (*models.User
 
 func (repo *UserRepository) FindByUsernameOrEmailWithRole(username string) (*[]dtos.UserWithClaimsResponse, error) {
 	queryResult := []dtos.UserWithClaimsResponse{}
-	rows, err := repo.DB.Raw("SELECT u.username, u.\"password\", r.role_name, m.module_name, rm.can_create, rm.can_read, rm.can_update, rm.can_delete"+
+	rows, err := repo.DB.Raw("SELECT u.username, u.\"password\", r.role_code, r.role_name, m.module_code, m.module_name, rm.can_create, rm.can_read, rm.can_update, rm.can_delete"+
 		" FROM users u"+
 		" JOIN \"role\" r ON r.role_id = u.role_id"+
 		" JOIN role_module rm ON rm.role_id = r.role_id"+

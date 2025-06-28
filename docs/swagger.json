@@ -737,9 +737,13 @@
         "dtos.CreateUpdateModuleRequest": {
             "type": "object",
             "required": [
+                "code",
                 "name"
             ],
             "properties": {
+                "code": {
+                    "type": "string"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -751,9 +755,13 @@
         "dtos.CreateUpdateRoleRequest": {
             "type": "object",
             "required": [
+                "code",
                 "name"
             ],
             "properties": {
+                "code": {
+                    "type": "string"
+                },
                 "is_active": {
                     "type": "boolean"
                 },
@@ -765,6 +773,9 @@
         "dtos.CreateUpdateRoleResponse": {
             "type": "object",
             "properties": {
+                "code": {
+                    "type": "string"
+                },
                 "createdDate": {
                     "type": "string"
                 },

@@ -10,5 +10,6 @@ type GetUserResponse struct {
 	CreatedDate time.Time  `json:"createdDate"`
 	UpdatedDate *time.Time `json:"updatedDate"`
 	RoleId      string     `json:"roleId"`
+	RoleCode    string     `json:"roleCode"`
 	RoleName    string     `json:"roleName"`
 }

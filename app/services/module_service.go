@@ -21,6 +21,7 @@ func NewModuleService(module repositories.ModuleReporitory) *ModuleService {
 
 func (r *ModuleService) CreateModule(data dtos.CreateUpdateModuleRequest) *dtos.CreateUpdateModuleResponse {
 	module := models.ModuleModel{
+		Code:   data.Code,
 		Name:   data.Name,
 		Remark: data.Remark,
 	}
@@ -29,6 +30,7 @@ func (r *ModuleService) CreateModule(data dtos.CreateUpdateModuleRequest) *dtos.
 
 	response := dtos.CreateUpdateModuleResponse{
 		Id:          result.ID,
+		Code:        result.Code,
 		Name:        result.Name,
 		Remark:      result.Remark,
 		CreatedDate: result.CreatedDate,
@@ -46,6 +48,7 @@ func (r *ModuleService) GetModules(param dtos.CommonParam) *[]dtos.CreateUpdateM
 		for _, module := range *result {
 			modules = append(modules, dtos.CreateUpdateModuleResponse{
 				Id:          module.ID,
+				Code:        module.Code,
 				Name:        module.Name,
 				Remark:      module.Remark,
 				CreatedDate: module.CreatedDate,
@@ -64,6 +67,7 @@ func (r *ModuleService) GetModuleById(id dtos.UriUuid) *dtos.CreateUpdateModuleR
 	if len(result.ID) > 0 {
 		data := dtos.CreateUpdateModuleResponse{
 			Id:          result.ID,
+			Code:        result.Code,
 			Name:        result.Name,
 			Remark:      result.Remark,
 			CreatedDate: result.CreatedDate,
@@ -83,6 +87,7 @@ func (r *ModuleService) GetModuleByName(name dtos.UriName) *[]dtos.CreateUpdateM
 		for _, module := range *result {
 			modules = append(modules, dtos.CreateUpdateModuleResponse{
 				Id:          module.ID,
+				Code:        module.Code,
 				Name:        module.Name,
 				Remark:      module.Remark,
 				CreatedDate: module.CreatedDate,
@@ -99,6 +104,7 @@ func (r *ModuleService) PutModule(id dtos.UriUuid, module dtos.CreateUpdateModul
 	timeNow := time.Now()
 	data := models.ModuleModel{
 		ID:          id.Id,
+		Code:        module.Code,
 		Name:        module.Name,
 		Remark:      module.Remark,
 		UpdatedDate: &timeNow,
@@ -115,6 +121,7 @@ func (r *ModuleService) PutModule(id dtos.UriUuid, module dtos.CreateUpdateModul
 
 	updatedModule := dtos.CreateUpdateModuleResponse{
 		Id:          result.ID,
+		Code:        result.Code,
 		Name:        result.Name,
 		Remark:      result.Remark,
 		CreatedDate: result.CreatedDate,
@@ -133,6 +140,7 @@ func (r *ModuleService) DeleteModule(id dtos.UriUuid) *dtos.CreateUpdateModuleRe
 	if len(result.ID) > 1 {
 		data := &dtos.CreateUpdateModuleResponse{
 			Id:          result.ID,
+			Code:        result.Code,
 			Name:        result.Name,
 			Remark:      result.Remark,
 			CreatedDate: result.CreatedDate,

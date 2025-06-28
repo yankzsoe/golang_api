@@ -24,24 +24,32 @@ definitions:
     type: object
   dtos.CreateUpdateModuleRequest:
     properties:
+      code:
+        type: string
       name:
         type: string
       remark:
         type: string
     required:
+    - code
     - name
     type: object
   dtos.CreateUpdateRoleRequest:
     properties:
+      code:
+        type: string
       is_active:
         type: boolean
       name:
         type: string
     required:
+    - code
     - name
     type: object
   dtos.CreateUpdateRoleResponse:
     properties:
+      code:
+        type: string
       createdDate:
         type: string
       id:

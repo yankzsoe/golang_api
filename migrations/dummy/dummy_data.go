@@ -13,6 +13,7 @@ func GetDummyRole() []models.RoleModel {
 		// Create role with name Admin
 		{
 			ID:          "dcefcb7d-cd77-42ae-8da0-a8707487cd15",
+			Code:        "admin",
 			Name:        "Admin",
 			IsActive:    true,
 			CreatedDate: time.Now(),
@@ -20,6 +21,7 @@ func GetDummyRole() []models.RoleModel {
 		// Create role with name User
 		{
 			ID:          "77691975-c695-4afd-aa40-286f2a26857d",
+			Code:        "user",
 			Name:        "User",
 			IsActive:    true,
 			CreatedDate: time.Now(),
@@ -32,6 +34,7 @@ func GetDummyModule() []models.ModuleModel {
 		// Create module 'User' cz only table user we will manage
 		{
 			ID:          "81601ca7-d217-41a6-8b1c-b7fd46fb7a91",
+			Code:        "user",
 			Name:        "User",
 			Remark:      "User Management",
 			CreatedDate: time.Now(),

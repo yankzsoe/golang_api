@@ -31,7 +31,7 @@ func (u *AuthenticationService) Login(dto dtos.LoginRequest) (int, *dtos.Token, 
 	}
 
 	if len(*userWithRoles) == 0 {
-		return 404, nil, errors.New("user not found")
+		return 401, nil, errors.New("Unauthorized")
 	}
 
 	aes128 := tools.Aes128{}
@@ -41,12 +41,12 @@ func (u *AuthenticationService) Login(dto dtos.LoginRequest) (int, *dtos.Token, 
 	}
 
 	if dto.Password != *decryptedPassword {
-		return 401, nil, errors.New("invalid password")
+		return 401, nil, errors.New("Unauthorized")
 	}
 
 	permissions := ConvertToPermissionsList(*userWithRoles)
 
-	token, err := GenerateToken((*userWithRoles)[0].Username, (*userWithRoles)[0].RoleName, permissions)
+	token, err := GenerateToken((*userWithRoles)[0].Username, (*userWithRoles)[0].RoleCode, (*userWithRoles)[0].RoleName, permissions)
 	if err != nil {
 		return 500, nil, err
 	}
@@ -54,7 +54,7 @@ func (u *AuthenticationService) Login(dto dtos.LoginRequest) (int, *dtos.Token, 
 	return 200, token, nil
 }
 
-func GenerateToken(username string, roleName string, permissions []dtos.Permission) (*dtos.Token, error) {
+func GenerateToken(username string, roleCode string, roleName string, permissions []dtos.Permission) (*dtos.Token, error) {
 	iat := jwt.NewNumericDate(time.Now())
 	exp := jwt.NewNumericDate(time.Now().Add(time.Millisecond * time.Duration(configs.GetJWTConfigurationInstance().Exp)))
 
@@ -68,6 +68,7 @@ func GenerateToken(username string, roleName string, permissions []dtos.Permissi
 		},
 		Role: dtos.RoleSwagger{
 			Name:        roleName,
+			Code:        roleCode,
 			Permissions: permissions,
 		},
 	}
@@ -134,11 +135,12 @@ func ConvertToPermissionsList(data []dtos.UserWithClaimsResponse) []dtos.Permiss
 	result := []dtos.Permission{}
 	for _, r := range data {
 		result = append(result, dtos.Permission{
-			Module:    r.ModuleName,
-			CanCreate: r.CanCreate,
-			CanRead:   r.CanRead,
-			CanUpdate: r.CanUpdate,
-			CanDelete: r.CanDelete,
+			ModuleCode: r.ModuleCode,
+			Module:     r.ModuleName,
+			CanCreate:  r.CanCreate,
+			CanRead:    r.CanRead,
+			CanUpdate:  r.CanUpdate,
+			CanDelete:  r.CanDelete,
 		})
 	}
 	return result
@@ -190,7 +192,7 @@ func (u *AuthenticationService) LoginOAuthGoogle(dto tools.UserInfoResponse) (in
 
 	permissions := ConvertToPermissionsList(*userWithRoles)
 
-	token, err := GenerateToken((*userWithRoles)[0].Username, (*userWithRoles)[0].RoleName, permissions)
+	token, err := GenerateToken((*userWithRoles)[0].Username, (*userWithRoles)[0].RoleCode, (*userWithRoles)[0].RoleName, permissions)
 	if err != nil {
 		return 500, nil, err
 	}
@@ -225,7 +227,7 @@ func (u *AuthenticationService) RefreshToken(dto dtos.RefreshTokenRequest) (int,
 
 	permissions := ConvertToPermissionsList(*userWithRoles)
 
-	token, err := GenerateToken((*userWithRoles)[0].Username, (*userWithRoles)[0].RoleName, permissions)
+	token, err := GenerateToken((*userWithRoles)[0].Username, (*userWithRoles)[0].RoleCode, (*userWithRoles)[0].RoleName, permissions)
 	if err != nil {
 		return 500, nil, err
 	}

@@ -21,6 +21,7 @@ func NewRoleService(role repositories.RoleReporitory) *RoleService {
 
 func (r *RoleService) CreateRole(data dtos.CreateUpdateRoleRequest) *dtos.CreateUpdateRoleResponse {
 	role := models.RoleModel{
+		Code:     data.Code,
 		Name:     data.Name,
 		IsActive: data.IsActive,
 	}
@@ -29,6 +30,7 @@ func (r *RoleService) CreateRole(data dtos.CreateUpdateRoleRequest) *dtos.Create
 
 	response := dtos.CreateUpdateRoleResponse{
 		Id:          result.ID,
+		Code:        result.Code,
 		Name:        result.Name,
 		IsActive:    result.IsActive,
 		CreatedDate: result.CreatedDate,
@@ -46,6 +48,7 @@ func (r *RoleService) GetRoles(param dtos.CommonParam) *[]dtos.CreateUpdateRoleR
 		for _, role := range *result {
 			roles = append(roles, dtos.CreateUpdateRoleResponse{
 				Id:          role.ID,
+				Code:        role.Code,
 				Name:        role.Name,
 				IsActive:    role.IsActive,
 				CreatedDate: role.CreatedDate,
@@ -64,6 +67,7 @@ func (r *RoleService) GetRoleById(id dtos.UriUuid) *dtos.CreateUpdateRoleRespons
 	if len(result.ID) > 0 {
 		data := dtos.CreateUpdateRoleResponse{
 			Id:          result.ID,
+			Code:        result.Code,
 			Name:        result.Name,
 			IsActive:    result.IsActive,
 			CreatedDate: result.CreatedDate,
@@ -83,6 +87,7 @@ func (r *RoleService) GetRoleByName(name dtos.UriName) *[]dtos.CreateUpdateRoleR
 		for _, role := range *result {
 			roles = append(roles, dtos.CreateUpdateRoleResponse{
 				Id:          role.ID,
+				Code:        role.Code,
 				Name:        role.Name,
 				IsActive:    role.IsActive,
 				CreatedDate: role.CreatedDate,
@@ -103,6 +108,7 @@ func (r *RoleService) PutRole(id dtos.UriUuid, role dtos.CreateUpdateRoleRequest
 	timeNow := time.Now()
 	data := models.RoleModel{
 		ID:          id.Id,
+		Code:        role.Code,
 		Name:        role.Name,
 		IsActive:    role.IsActive,
 		UpdatedDate: &timeNow,
@@ -119,6 +125,7 @@ func (r *RoleService) PutRole(id dtos.UriUuid, role dtos.CreateUpdateRoleRequest
 
 	updatedRole := dtos.CreateUpdateRoleResponse{
 		Id:          result.ID,
+		Code:        role.Code,
 		Name:        result.Name,
 		IsActive:    result.IsActive,
 		CreatedDate: result.CreatedDate,
@@ -173,6 +180,7 @@ func (r *RoleService) DeleteRole(id dtos.UriUuid) *dtos.CreateUpdateRoleResponse
 	if len(result.ID) > 1 {
 		data := &dtos.CreateUpdateRoleResponse{
 			Id:          result.ID,
+			Code:        result.Code,
 			Name:        result.Name,
 			IsActive:    result.IsActive,
 			CreatedDate: result.CreatedDate,
