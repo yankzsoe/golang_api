@@ -19,7 +19,7 @@ var onceDb sync.Once
 var customLogger = logger.New(
 	log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
 	logger.Config{
-		LogLevel: logger.Info, // Log level
+		LogLevel: logger.Warn, // Log level
 	},
 )
 

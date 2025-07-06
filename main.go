@@ -1,6 +1,9 @@
 package main
 
 import (
+	"bytes"
+	"context"
+	"encoding/json"
 	"flag"
 	"fmt"
 	config "golang_api/configs"
@@ -8,10 +11,12 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"golang_api/docs"
 	"golang_api/migrations"
 
+	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -23,6 +28,7 @@ var (
 
 //	@contact.url				https://www.linkedin.com/in/yayang-suryana-308a5213a/
 //	@contact.email				yankzsoe@gmail.com
+//
 // @contact.name				API Support
 // @contact.url				https://www.linkedin.com/in/yayang-suryana-308a5213a/
 // @contact.email				yankzsoe@gmail.com
@@ -50,6 +56,43 @@ func main() {
 
 	// Initialize connection to Database
 	config.InitDB()
+
+	// config elastic
+	cfg := elasticsearch.Config{
+		Addresses: []string{
+			"http://host.docker.internal:9200", // pakai https kalau security enabled!
+		},
+		Username: "elastic", // atau user lain
+		Password: "changeme",
+		// Jika pakai self-signed certificate dan develop, bisa skip verify:
+		// (JANGAN untuk production!)
+		// TLS: &tls.Config{InsecureSkipVerify: true},
+	}
+
+	es, err := elasticsearch.NewClient(cfg)
+	if err != nil {
+		panic(err)
+	}
+
+	// sample document log
+	doc := map[string]interface{}{
+		"timestamp": time.Now().Format(time.RFC3339),
+		"level":     "INFO",
+		"message":   "Aplikasi berjalan",
+		"service":   "my-go-app",
+		"user":      "yayang",
+	}
+	data, _ := json.Marshal(doc)
+	res, err := es.Index(
+		"go-app-logs",
+		bytes.NewReader(data),
+		es.Index.WithContext(context.Background()),
+	)
+
+	if err != nil {
+		panic(err)
+	}
+	defer res.Body.Close()
 
 	// Implement Custom Migrations
 	if err := migrations.Apply(); err != nil {
